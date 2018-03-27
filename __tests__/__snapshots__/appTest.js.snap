@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app should return the status 1`] = `"GraphQL status: OK"`;
