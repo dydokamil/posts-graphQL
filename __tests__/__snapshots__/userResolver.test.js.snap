@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`user resolver should respond with a user 1`] = `
+Object {
+  "createdAt": "2018-12-12T13:00:00",
+  "email": "User1@gql.com",
+  "id": 1,
+  "lastLogin": "2018-12-12T03:14:07",
+  "posts": Array [
+    1,
+    2,
+    3,
+  ],
+  "username": "User1",
+}
+`;
+
 exports[`user resolver should respond with users 1`] = `
 Array [
   Object {

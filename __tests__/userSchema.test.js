@@ -22,4 +22,22 @@ describe('User schema', () => {
     expect(users.length).toBe(3)
     expect(users).toMatchSnapshot()
   })
+
+  it('should respond with an object of a particular user', async () => {
+    const query = `
+      {
+        user(userId: 1) {
+          id
+          username
+          email
+          createdAt
+          lastLogin
+          posts
+        }
+      }
+    `
+    const result = await graphql(schema, query)
+    const user = result.data.user
+    expect(user).toMatchSnapshot()
+  })
 })

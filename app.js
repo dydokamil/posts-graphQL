@@ -18,18 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use(
-  '/graphiql',
-  graphiqlExpress({
-    endpointURL: '/graphql'
-  })
-)
-app.use(
-  '/graphql',
-  bodyParser.json(),
-  graphqlExpress({
-    schema
-  })
-)
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
+app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
 
 module.exports = app

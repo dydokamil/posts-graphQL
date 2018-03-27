@@ -35,3 +35,18 @@ Array [
   },
 ]
 `;
+
+exports[`User schema should respond with an object of a particular user 1`] = `
+Object {
+  "createdAt": "2018-12-12T13:00:00",
+  "email": "User1@gql.com",
+  "id": "1",
+  "lastLogin": "2018-12-12T03:14:07",
+  "posts": Array [
+    "1",
+    "2",
+    "3",
+  ],
+  "username": "User1",
+}
+`;
