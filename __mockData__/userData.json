@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "username": "User1",
     "email": "User1@gql.com",
     "createdAt": "2018-12-12T13:00:00",
@@ -7,6 +8,7 @@
     "posts": [1, 2, 3]
   },
   {
+    "id": 2,
     "username": "User2",
     "email": "User2@gql.com",
     "createdAt": "2018-12-11T18:00:00",
@@ -14,6 +16,7 @@
     "posts": []
   },
   {
+    "id": 3,
     "username": "User3",
     "email": "User3@gql.com",
     "createdAt": "2018-12-15T19:00:00",

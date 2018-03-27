@@ -8,8 +8,12 @@ describe('User schema', () => {
     const query = `
     {
       users {
+        id
         username
         email
+        createdAt
+        lastLogin
+        posts
       }
     } 
     `

@@ -5,6 +5,7 @@ Array [
   Object {
     "createdAt": "2018-12-12T13:00:00",
     "email": "User1@gql.com",
+    "id": 1,
     "lastLogin": "2018-12-12T03:14:07",
     "posts": Array [
       1,
@@ -16,6 +17,7 @@ Array [
   Object {
     "createdAt": "2018-12-11T18:00:00",
     "email": "User2@gql.com",
+    "id": 2,
     "lastLogin": "2018-12-13T01:14:07",
     "posts": Array [],
     "username": "User2",
@@ -23,6 +25,7 @@ Array [
   Object {
     "createdAt": "2018-12-15T19:00:00",
     "email": "User3@gql.com",
+    "id": 3,
     "lastLogin": "2018-12-19T02:14:07",
     "posts": Array [
       4,
