@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1522173305261" clover="3.2.0">
-  <project timestamp="1522173305261" name="All files">
-    <metrics statements="31" coveredstatements="31" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="9" elements="40" coveredelements="40" complexity="0" loc="31" ncloc="31" packages="1" files="4" classes="4">
+<coverage generated="1522175268703" clover="3.2.0">
+  <project timestamp="1522175268703" name="All files">
+    <metrics statements="32" coveredstatements="32" conditionals="0" coveredconditionals="0" methods="11" coveredmethods="11" elements="43" coveredelements="43" complexity="0" loc="32" ncloc="32" packages="1" files="4" classes="4">
       <file name="app.js" path="/Users/kamildydo/Projects/express-projs/forum-gql/app.js">
         <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
@@ -27,7 +27,7 @@
         <line num="3" count="5" type="stmt"/>
       </file>
       <file name="resolvers.js" path="/Users/kamildydo/Projects/express-projs/forum-gql/resolvers.js">
-        <metrics statements="9" coveredstatements="9" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="9"/>
+        <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="11" coveredmethods="11"/>
         <line num="1" count="5" type="stmt"/>
         <line num="3" count="5" type="stmt"/>
         <line num="5" count="5" type="stmt"/>
@@ -36,14 +36,15 @@
         <line num="10" count="2" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
         <line num="13" count="2" type="stmt"/>
-        <line num="17" count="5" type="stmt"/>
+        <line num="17" count="2" type="stmt"/>
+        <line num="21" count="5" type="stmt"/>
       </file>
       <file name="schema.js" path="/Users/kamildydo/Projects/express-projs/forum-gql/schema.js">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="3" type="stmt"/>
         <line num="2" count="3" type="stmt"/>
         <line num="4" count="3" type="stmt"/>
-        <line num="31" count="3" type="stmt"/>
+        <line num="35" count="3" type="stmt"/>
       </file>
     </metrics>
   </project>

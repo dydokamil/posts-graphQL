@@ -65,4 +65,31 @@ describe('post schema', () => {
     const post = result.data.post
     expect(post).toMatchSnapshot()
   })
+
+  it('should create a post', async () => {
+    const message = 'Hello world!'
+
+    const query = `
+      mutation {
+        createPost(message: "${message}") {
+          id
+          author {
+            id
+            username
+            email
+            createdAt
+            lastLogin
+          }
+          createdAt
+          editedAt
+          message
+        }
+      } 
+    `
+
+    const result = await graphql(schema, query)
+    const createPost = result.data.createPost
+    expect(createPost.message).toBe(message)
+    expect(createPost).toMatchSnapshot()
+  })
 })

@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`post schema should create a post 1`] = `
+Object {
+  "author": Object {
+    "createdAt": null,
+    "email": null,
+    "id": null,
+    "lastLogin": null,
+    "username": null,
+  },
+  "createdAt": "2018-10-10T13:00:00",
+  "editedAt": "2018-10-10T13:00:00",
+  "id": "1",
+  "message": "Hello world!",
+}
+`;
+
 exports[`post schema should fetch a list of posts 1`] = `
 Array [
   Object {

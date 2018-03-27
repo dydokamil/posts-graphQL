@@ -1,6 +1,6 @@
 jest.mock('axios')
 
-const { Query } = require('../resolvers')
+const { Query, Mutation } = require('../resolvers')
 
 describe('post resolver', () => {
   it('should get a list of posts', async () => {
@@ -14,5 +14,12 @@ describe('post resolver', () => {
     const user = await Query.post({}, { postId: id })
     expect(user.id).toBe(id)
     expect(user).toMatchSnapshot()
+  })
+
+  it('should create a post', async () => {
+    const message = 'Hello world!'
+    const createPost = await Mutation.createPost({}, { message })
+    expect(createPost.message).toBe(message)
+    expect(createPost).toMatchSnapshot()
   })
 })

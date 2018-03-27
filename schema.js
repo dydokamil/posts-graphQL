@@ -10,6 +10,10 @@ const typeDefs = `
     post(postId: ID): Post
   }
 
+  type Mutation {
+    createPost(message: String): Post
+  }
+
   type User {
     id: ID
     username: String
