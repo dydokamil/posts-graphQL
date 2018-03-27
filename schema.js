@@ -6,6 +6,7 @@ const typeDefs = `
     status: String
     users: [User]
     user(userId:ID): User
+    posts: [Post]
   }
 
   type User {
@@ -15,6 +16,14 @@ const typeDefs = `
     createdAt: String
     lastLogin: String
     posts: [ID]
+  }
+
+  type Post {
+      id: ID
+      author: User 
+      createdAt: String
+      editedAt: String
+      message: String
   }
 `
 

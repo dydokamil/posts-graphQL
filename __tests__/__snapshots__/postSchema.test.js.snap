@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`post schema should fetch a list of posts 1`] = `
+Array [
+  Object {
+    "author": Object {
+      "createdAt": null,
+      "email": null,
+      "id": null,
+      "lastLogin": null,
+      "posts": null,
+      "username": null,
+    },
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "id": "1",
+    "message": "Some message",
+  },
+  Object {
+    "author": Object {
+      "createdAt": null,
+      "email": null,
+      "id": null,
+      "lastLogin": null,
+      "posts": null,
+      "username": null,
+    },
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "id": "2",
+    "message": "Some message",
+  },
+  Object {
+    "author": Object {
+      "createdAt": null,
+      "email": null,
+      "id": null,
+      "lastLogin": null,
+      "posts": null,
+      "username": null,
+    },
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "id": "3",
+    "message": "Some message",
+  },
+  Object {
+    "author": Object {
+      "createdAt": null,
+      "email": null,
+      "id": null,
+      "lastLogin": null,
+      "posts": null,
+      "username": null,
+    },
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "id": "4",
+    "message": "Some message",
+  },
+  Object {
+    "author": Object {
+      "createdAt": null,
+      "email": null,
+      "id": null,
+      "lastLogin": null,
+      "posts": null,
+      "username": null,
+    },
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "id": "5",
+    "message": "Some message",
+  },
+]
+`;

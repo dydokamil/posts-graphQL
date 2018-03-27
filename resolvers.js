@@ -7,7 +7,8 @@ const resolvers = {
     status: () => 'GraphQL status: OK',
     users: () => axios.get(`${ROOT_URL}/users`).then(res => res.data),
     user: (obj, args) =>
-      axios.get(`${ROOT_URL}/user/${args.userId}`).then(res => res.data)
+      axios.get(`${ROOT_URL}/user/${args.userId}`).then(res => res.data),
+    posts: () => axios.get(`${ROOT_URL}/posts`).then(res => res.data)
   }
 }
 

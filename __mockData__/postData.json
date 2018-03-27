@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "author": 1,
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "message": "Some message"
+  },
+
+  {
+    "id": 2,
+    "author": 1,
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "message": "Some message"
+  },
+
+  {
+    "id": 3,
+    "author": 1,
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "message": "Some message"
+  },
+
+  {
+    "id": 4,
+    "author": 3,
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "message": "Some message"
+  },
+
+  {
+    "id": 5,
+    "author": 3,
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "message": "Some message"
+  }
+]
