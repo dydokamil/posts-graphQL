@@ -4,12 +4,16 @@ exports[`post schema should fetch a list of posts 1`] = `
 Array [
   Object {
     "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
+      "createdAt": "2018-12-12T13:00:00",
+      "email": "User1@gql.com",
+      "id": "1",
+      "lastLogin": "2018-12-12T03:14:07",
+      "posts": Array [
+        "1",
+        "2",
+        "3",
+      ],
+      "username": "User1",
     },
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
@@ -18,12 +22,16 @@ Array [
   },
   Object {
     "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
+      "createdAt": "2018-12-12T13:00:00",
+      "email": "User1@gql.com",
+      "id": "1",
+      "lastLogin": "2018-12-12T03:14:07",
+      "posts": Array [
+        "1",
+        "2",
+        "3",
+      ],
+      "username": "User1",
     },
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
@@ -32,12 +40,16 @@ Array [
   },
   Object {
     "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
+      "createdAt": "2018-12-12T13:00:00",
+      "email": "User1@gql.com",
+      "id": "1",
+      "lastLogin": "2018-12-12T03:14:07",
+      "posts": Array [
+        "1",
+        "2",
+        "3",
+      ],
+      "username": "User1",
     },
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
@@ -46,12 +58,15 @@ Array [
   },
   Object {
     "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
+      "createdAt": "2018-12-15T19:00:00",
+      "email": "User3@gql.com",
+      "id": "3",
+      "lastLogin": "2018-12-19T02:14:07",
+      "posts": Array [
+        "4",
+        "5",
+      ],
+      "username": "User3",
     },
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
@@ -60,12 +75,15 @@ Array [
   },
   Object {
     "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
+      "createdAt": "2018-12-15T19:00:00",
+      "email": "User3@gql.com",
+      "id": "3",
+      "lastLogin": "2018-12-19T02:14:07",
+      "posts": Array [
+        "4",
+        "5",
+      ],
+      "username": "User3",
     },
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
@@ -73,4 +91,24 @@ Array [
     "message": "Some message",
   },
 ]
+`;
+
+exports[`post schema should respond with a single post 1`] = `
+Object {
+  "author": Object {
+    "createdAt": "2018-12-15T19:00:00",
+    "email": "User3@gql.com",
+    "id": "3",
+    "lastLogin": "2018-12-19T02:14:07",
+    "posts": Array [
+      "4",
+      "5",
+    ],
+    "username": "User3",
+  },
+  "createdAt": "2018-10-10T13:00:00",
+  "editedAt": "2018-10-10T13:00:00",
+  "id": "4",
+  "message": "Some message",
+}
 `;

@@ -24,9 +24,10 @@ describe('User schema', () => {
   })
 
   it('should respond with an object of a particular user', async () => {
+    const id = 1
     const query = `
       {
-        user(userId: 1) {
+        user(userId: ${id}) {
           id
           username
           email
@@ -38,6 +39,7 @@ describe('User schema', () => {
     `
     const result = await graphql(schema, query)
     const user = result.data.user
+    expect(user.id).toEqual(`${id}`)
     expect(user).toMatchSnapshot()
   })
 })

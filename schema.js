@@ -5,8 +5,9 @@ const typeDefs = `
   type Query {
     status: String
     users: [User]
-    user(userId:ID): User
+    user(userId: ID): User
     posts: [Post]
+    post(postId: ID): Post
   }
 
   type User {

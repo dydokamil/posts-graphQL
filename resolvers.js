@@ -8,7 +8,9 @@ const resolvers = {
     users: () => axios.get(`${ROOT_URL}/users`).then(res => res.data),
     user: (obj, args) =>
       axios.get(`${ROOT_URL}/user/${args.userId}`).then(res => res.data),
-    posts: () => axios.get(`${ROOT_URL}/posts`).then(res => res.data)
+    posts: () => axios.get(`${ROOT_URL}/posts`).then(res => res.data),
+    post: (obj, args) =>
+      axios.get(`${ROOT_URL}/post/${args.postId}`).then(res => res.data)
   }
 }
 

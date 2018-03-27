@@ -10,8 +10,9 @@ describe('user resolver', () => {
   })
 
   it('should respond with a user', async () => {
-    const user = await Query.user({}, { userId: 1 })
-    expect(user.id).toBe(1)
+    const id = 1
+    const user = await Query.user({}, { userId: id })
+    expect(user.id).toBe(id)
     expect(user).toMatchSnapshot()
   })
 })

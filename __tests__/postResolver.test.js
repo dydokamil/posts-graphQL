@@ -8,4 +8,11 @@ describe('post resolver', () => {
     expect(posts.length).toBe(5)
     expect(posts).toMatchSnapshot()
   })
+
+  it('should get a specific post', async () => {
+    const id = 4
+    const user = await Query.post({}, { postId: id })
+    expect(user.id).toBe(id)
+    expect(user).toMatchSnapshot()
+  })
 })

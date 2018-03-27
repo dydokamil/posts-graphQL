@@ -29,4 +29,31 @@ describe('post schema', () => {
     expect(posts.length).toBe(5)
     expect(posts).toMatchSnapshot()
   })
+
+  it('should respond with a single post', async () => {
+    const id = 4
+    const query = `
+      {
+        post(postId: ${id}) {
+          id
+          author {
+            id
+            username
+            email
+            createdAt
+            lastLogin
+            posts
+          }
+          createdAt
+          editedAt
+          message
+        }
+      } 
+    `
+
+    const result = await graphql(schema, query)
+    const post = result.data.post
+    expect(post.id).toEqual(`${id}`)
+    expect(post).toMatchSnapshot()
+  })
 })
