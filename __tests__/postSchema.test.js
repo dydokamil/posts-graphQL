@@ -15,7 +15,12 @@ describe('post schema', () => {
             email
             createdAt
             lastLogin
-            posts
+            posts {
+              id 
+              createdAt 
+              editedAt
+              message
+            }
           }
           createdAt
           editedAt
@@ -42,7 +47,12 @@ describe('post schema', () => {
             email
             createdAt
             lastLogin
-            posts
+            posts {
+              id 
+              createdAt 
+              editedAt
+              message
+            }
           }
           createdAt
           editedAt
@@ -53,7 +63,6 @@ describe('post schema', () => {
 
     const result = await graphql(schema, query)
     const post = result.data.post
-    expect(post.id).toEqual(`${id}`)
     expect(post).toMatchSnapshot()
   })
 })

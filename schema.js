@@ -16,7 +16,7 @@ const typeDefs = `
     email: String
     createdAt: String
     lastLogin: String
-    posts: [ID]
+    posts: [Post]
   }
 
   type Post {

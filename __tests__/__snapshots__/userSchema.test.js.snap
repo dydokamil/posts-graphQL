@@ -8,9 +8,24 @@ Array [
     "id": "1",
     "lastLogin": "2018-12-12T03:14:07",
     "posts": Array [
-      "1",
-      "2",
-      "3",
+      Object {
+        "createdAt": null,
+        "editedAt": null,
+        "id": null,
+        "message": null,
+      },
+      Object {
+        "createdAt": null,
+        "editedAt": null,
+        "id": null,
+        "message": null,
+      },
+      Object {
+        "createdAt": null,
+        "editedAt": null,
+        "id": null,
+        "message": null,
+      },
     ],
     "username": "User1",
   },
@@ -28,8 +43,18 @@ Array [
     "id": "3",
     "lastLogin": "2018-12-19T02:14:07",
     "posts": Array [
-      "4",
-      "5",
+      Object {
+        "createdAt": null,
+        "editedAt": null,
+        "id": null,
+        "message": null,
+      },
+      Object {
+        "createdAt": null,
+        "editedAt": null,
+        "id": null,
+        "message": null,
+      },
     ],
     "username": "User3",
   },
@@ -43,9 +68,24 @@ Object {
   "id": "1",
   "lastLogin": "2018-12-12T03:14:07",
   "posts": Array [
-    "1",
-    "2",
-    "3",
+    Object {
+      "createdAt": null,
+      "editedAt": null,
+      "id": null,
+      "message": null,
+    },
+    Object {
+      "createdAt": null,
+      "editedAt": null,
+      "id": null,
+      "message": null,
+    },
+    Object {
+      "createdAt": null,
+      "editedAt": null,
+      "id": null,
+      "message": null,
+    },
   ],
   "username": "User1",
 }

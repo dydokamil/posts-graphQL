@@ -13,7 +13,12 @@ describe('User schema', () => {
           email
           createdAt
           lastLogin
-          posts
+          posts {
+            id 
+            createdAt 
+            editedAt
+            message
+          }
         }
       } 
     `
@@ -33,7 +38,12 @@ describe('User schema', () => {
           email
           createdAt
           lastLogin
-          posts
+          posts {
+            id 
+            createdAt 
+            editedAt
+            message 
+          }
         }
       }
     `
