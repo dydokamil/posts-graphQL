@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User schema should respond with a list of users 1`] = `
+Array [
+  Object {
+    "email": "User1@gql.com",
+    "username": "User1",
+  },
+  Object {
+    "email": "User2@gql.com",
+    "username": "User2",
+  },
+  Object {
+    "email": "User3@gql.com",
+    "username": "User3",
+  },
+]
+`;
