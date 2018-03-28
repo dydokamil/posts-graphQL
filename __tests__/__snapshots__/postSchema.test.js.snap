@@ -1,91 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`post schema should create a post 1`] = `
-Object {
-  "author": Object {
-    "createdAt": null,
-    "email": null,
-    "id": null,
-    "lastLogin": null,
-    "username": null,
-  },
-  "createdAt": "2018-10-10T13:00:00",
-  "editedAt": "2018-10-10T13:00:00",
-  "id": "1",
-  "message": "Hello world!",
-}
-`;
-
 exports[`post schema should fetch a list of posts 1`] = `
 Array [
   Object {
+    "_id": "5abba8e47af4d91c259e12ee",
     "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
+      "_id": "5abba8e47af4d91c259e12ef",
+      "createdAt": "2018-12-12T13:00:00",
+      "email": "User1@gql.com",
+      "lastLogin": "2018-12-12T03:14:07",
+      "posts": Array [
+        Object {
+          "_id": null,
+          "createdAt": null,
+          "editedAt": null,
+          "message": null,
+        },
+      ],
+      "username": "User1",
     },
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
-    "id": "1",
-    "message": "Some message",
-  },
-  Object {
-    "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
-    },
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": "2",
-    "message": "Some message",
-  },
-  Object {
-    "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
-    },
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": "3",
-    "message": "Some message",
-  },
-  Object {
-    "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
-    },
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": "4",
-    "message": "Some message",
-  },
-  Object {
-    "author": Object {
-      "createdAt": null,
-      "email": null,
-      "id": null,
-      "lastLogin": null,
-      "posts": null,
-      "username": null,
-    },
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": "5",
     "message": "Some message",
   },
 ]
@@ -93,17 +28,24 @@ Array [
 
 exports[`post schema should respond with a single post 1`] = `
 Object {
+  "_id": "5abba8e47af4d91c259e12ee",
   "author": Object {
-    "createdAt": null,
-    "email": null,
-    "id": null,
-    "lastLogin": null,
-    "posts": null,
-    "username": null,
+    "_id": "5abba8e47af4d91c259e12ef",
+    "createdAt": "2018-12-12T13:00:00",
+    "email": "User1@gql.com",
+    "lastLogin": "2018-12-12T03:14:07",
+    "posts": Array [
+      Object {
+        "_id": null,
+        "createdAt": null,
+        "editedAt": null,
+        "message": null,
+      },
+    ],
+    "username": "User1",
   },
   "createdAt": "2018-10-10T13:00:00",
   "editedAt": "2018-10-10T13:00:00",
-  "id": "4",
   "message": "Some message",
 }
 `;

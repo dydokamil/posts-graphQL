@@ -5,7 +5,7 @@ const Post = require('../models/post')
 const User = require('../models/user')
 
 describe('mongoose `Post` schema', () => {
-  const user = {
+  const userData = {
     _id: '5abba8e47af4d91c259e12ef',
     username: 'User1',
     email: 'User1@gql.com',
@@ -14,24 +14,26 @@ describe('mongoose `Post` schema', () => {
     posts: ['41224d776a326fb40f000002']
   }
 
-  const post = {
+  const postData = {
     _id: '5abba8e47af4d91c259e12ee',
-    author: user._id,
+    author: userData._id,
     createdAt: '2018-10-10T13:00:00',
     editedAt: '2018-10-10T13:00:00',
     message: 'Some message'
   }
 
-  beforeAll(() => {
-    mongoose.connect(MONGO_URL_DEV)
+  beforeAll(async () => {
+    await mongoose.connect(MONGO_URL_DEV)
+    // clear the database
+    await Post.removePosts()
+    await User.removeUsers()
   })
 
   beforeEach(async () => {
-    const userInstance = new User(user)
+    const userInstance = new User(userData)
     await userInstance.save()
 
-    const postInstance = new Post(post)
-
+    const postInstance = new Post(postData)
     await postInstance.save()
   })
 

@@ -5,17 +5,18 @@ const typeDefs = `
   type Query {
     status: String
     users: [User]
-    user(userId: ID): User
+    user(_id: ID): User
     posts: [Post]
-    post(postId: ID): Post
+    post(_id: ID): Post
   }
 
   type Mutation {
     createPost(message: String): Post
+    createUser(username: String! email: String!): User
   }
 
   type User {
-    id: ID
+    _id: ID
     username: String
     email: String
     createdAt: String
@@ -24,7 +25,7 @@ const typeDefs = `
   }
 
   type Post {
-      id: ID
+      _id: ID
       author: User 
       createdAt: String
       editedAt: String

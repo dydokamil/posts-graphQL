@@ -1,20 +1,39 @@
-const axios = require('axios')
+// const axios = require('axios')
+const mongoose = require('mongoose')
+const moment = require('moment')
 
-const { ROOT_URL } = require('./consts')
+const User = require('./models/user')
+const Post = require('./models/post')
+const { MONGO_URL_DEV } = require('./consts')
+
+mongoose.connect(MONGO_URL_DEV)
 
 const resolvers = {
   Query: {
     status: () => 'GraphQL status: OK',
-    users: () => axios.get(`${ROOT_URL}/users`).then(res => res.data),
-    user: (obj, args) =>
-      axios.get(`${ROOT_URL}/user/${args.userId}`).then(res => res.data),
-    posts: () => axios.get(`${ROOT_URL}/posts`).then(res => res.data),
-    post: (obj, args) =>
-      axios.get(`${ROOT_URL}/post/${args.postId}`).then(res => res.data)
+    users: () => User.find({}).populate('posts'),
+    user: (obj, args) => {
+      // TODO create a list of acceptable parameters
+      return User.findOne({ ...args }).populate('posts')
+      //, Object.keys(args).join(' ')
+    },
+    posts: () => Post.find({}).populate('author'),
+    post: (obj, args) => {
+      return Post.findOne({ ...args }).populate('author')
+    }
   },
   Mutation: {
-    createPost: (obj, args) =>
-      axios.post(`${ROOT_URL}/posts`, args).then(res => res.data)
+    createUser: (obj, args) => {
+      const { username, email } = args
+      const user = new User({ username, email, createdAt: moment.utc() })
+      return user.save()
+    },
+    createPost: (obj, args) => {
+      const { message, author } = args
+
+      const post = new Post({ message, author })
+      return post.save()
+    }
   }
 }
 

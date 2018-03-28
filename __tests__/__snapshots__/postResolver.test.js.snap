@@ -1,50 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`post resolver should create a post 1`] = `
-Object {
-  "author": 1,
-  "createdAt": "2018-10-10T13:00:00",
-  "editedAt": "2018-10-10T13:00:00",
-  "id": 1,
-  "message": "Hello world!",
-}
-`;
-
 exports[`post resolver should get a list of posts 1`] = `
 Array [
   Object {
-    "author": 1,
+    "__v": 0,
+    "_id": "5abba8e47af4d91c259e12ee",
+    "author": Object {
+      "__v": 0,
+      "_id": "5abba8e47af4d91c259e12ef",
+      "createdAt": "2018-12-12T13:00:00",
+      "email": "User1@gql.com",
+      "lastLogin": "2018-12-12T03:14:07",
+      "posts": Array [
+        "41224d776a326fb40f000002",
+      ],
+      "username": "User1",
+    },
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
-    "id": 1,
-    "message": "Some message",
-  },
-  Object {
-    "author": 1,
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": 2,
-    "message": "Some message",
-  },
-  Object {
-    "author": 1,
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": 3,
-    "message": "Some message",
-  },
-  Object {
-    "author": 3,
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": 4,
-    "message": "Some message",
-  },
-  Object {
-    "author": 3,
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
-    "id": 5,
     "message": "Some message",
   },
 ]
@@ -52,10 +25,21 @@ Array [
 
 exports[`post resolver should get a specific post 1`] = `
 Object {
-  "author": 3,
+  "__v": 0,
+  "_id": "5abba8e47af4d91c259e12ee",
+  "author": Object {
+    "__v": 0,
+    "_id": "5abba8e47af4d91c259e12ef",
+    "createdAt": "2018-12-12T13:00:00",
+    "email": "User1@gql.com",
+    "lastLogin": "2018-12-12T03:14:07",
+    "posts": Array [
+      "41224d776a326fb40f000002",
+    ],
+    "username": "User1",
+  },
   "createdAt": "2018-10-10T13:00:00",
   "editedAt": "2018-10-10T13:00:00",
-  "id": 4,
   "message": "Some message",
 }
 `;

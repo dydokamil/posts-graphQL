@@ -1,4 +1,4 @@
 const ROOT_URL = 'http://localhost:3000/graphql'
-const MONGO_URL_DEV = 'mongodb://localhost/forum-gql'
+const MONGO_URL_DEV = 'mongodb://localhost/forum-gql-dev'
 
 module.exports = { ROOT_URL, MONGO_URL_DEV }
