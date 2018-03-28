@@ -10,6 +10,7 @@ describe('User GQL schema', () => {
   const userData = {
     _id: '5abba8e47af4d91c259e12ef',
     username: 'User1',
+    password: 'test',
     email: 'User1@gql.com',
     createdAt: '2018-12-12T13:00:00',
     lastLogin: '2018-12-12T03:14:07',
@@ -85,14 +86,17 @@ describe('User GQL schema', () => {
     expect(user).toMatchSnapshot()
   })
 
-  it('should create an user', async () => {
-    const { username, email } = userData
+  it('should create a user', async () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
 
     const query = `
       mutation {
         createUser(
           username: "${username}" 
           email: "${email}"
+          password: "${password}"
         ) {
           _id
           username
@@ -113,5 +117,27 @@ describe('User GQL schema', () => {
     const createUser = result.data.createUser
     expect(createUser.username).toBe(username)
     expect(createUser.email).toBe(email)
+  })
+
+  it('should not fetch the password', async () => {
+    const query = `
+      mutation {
+        createUser(
+          username: "Jason2"
+          email: "Jason2@jason.json"
+          password: "test"
+        ) {
+          _id
+          username
+          email
+          createdAt
+          lastLogin
+          password
+        }
+      } 
+    `
+
+    const result = await graphql(schema, query)
+    expect(result).toMatchSnapshot()
   })
 })

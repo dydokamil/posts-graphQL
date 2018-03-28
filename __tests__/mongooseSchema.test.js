@@ -7,6 +7,7 @@ const User = require('../models/user')
 describe('mongoose `Post` schema', () => {
   const userData = {
     _id: '5abba8e47af4d91c259e12ef',
+    password: 'test',
     username: 'User1',
     email: 'User1@gql.com',
     createdAt: '2018-12-12T13:00:00',
@@ -52,10 +53,21 @@ describe('mongoose `Post` schema', () => {
     expect(result.length).toBe(1)
   })
 
-  it('should delete all post', async () => {
+  it('should delete all posts', async () => {
     await Post.removePosts()
     const posts = await Post.find({})
     expect(posts.length).toBe(0)
     expect(posts).toEqual([])
+  })
+
+  it('should create a user and hash their password', async () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    const user = await User.createUser(username, email, password)
+    expect(user.username).toBe(username)
+    expect(user.email).toBe(email)
+    expect(user.password).not.toBe(password)
   })
 })

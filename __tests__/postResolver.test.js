@@ -11,6 +11,7 @@ describe('post resolver', () => {
   const userData = {
     _id: '5abba8e47af4d91c259e12ef',
     username: 'User1',
+    password: 'test',
     email: 'User1@gql.com',
     createdAt: '2018-12-12T13:00:00',
     lastLogin: '2018-12-12T03:14:07',

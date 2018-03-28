@@ -1,5 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`User GQL schema should not fetch the password 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Cannot query field "password" on type "User".],
+  ],
+}
+`;
+
 exports[`User GQL schema should respond with a list of users 1`] = `
 Array [
   Object {

@@ -1,6 +1,5 @@
 // const axios = require('axios')
 const mongoose = require('mongoose')
-const moment = require('moment')
 
 const User = require('./models/user')
 const Post = require('./models/post')
@@ -15,7 +14,7 @@ const resolvers = {
     user: (obj, args) => {
       // TODO create a list of acceptable parameters
       return User.findOne({ ...args }).populate('posts')
-      //, Object.keys(args).join(' ')
+      // , Object.keys(args).join(' ')
     },
     posts: () => Post.find({}).populate('author'),
     post: (obj, args) => {
@@ -24,9 +23,9 @@ const resolvers = {
   },
   Mutation: {
     createUser: (obj, args) => {
-      const { username, email } = args
-      const user = new User({ username, email, createdAt: moment.utc() })
-      return user.save()
+      const { username, email, password } = args
+      const user = User.createUser(username, email, password)
+      return user
     },
     createPost: (obj, args) => {
       const { message, author } = args

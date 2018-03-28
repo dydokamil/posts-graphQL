@@ -7,6 +7,7 @@ Object {
   "createdAt": "2018-12-12T13:00:00",
   "email": "User1@gql.com",
   "lastLogin": "2018-12-12T03:14:07",
+  "password": "test",
   "posts": Array [
     Object {
       "__v": 0,
@@ -29,6 +30,7 @@ Array [
     "createdAt": "2018-12-12T13:00:00",
     "email": "User1@gql.com",
     "lastLogin": "2018-12-12T03:14:07",
+    "password": "test",
     "posts": Array [
       Object {
         "__v": 0,

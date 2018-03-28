@@ -10,6 +10,7 @@ const { Query, Mutation } = require('../resolvers')
 describe('user resolver', () => {
   const userData = {
     _id: '5abba8e47af4d91c259e12ef',
+    password: 'test',
     username: 'User1',
     email: 'User1@gql.com',
     createdAt: '2018-12-12T13:00:00',
@@ -63,9 +64,13 @@ describe('user resolver', () => {
   })
 
   it('should create a user', async () => {
-    const { username, email } = userData
-    const user = await Mutation.createUser({}, { username, email })
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    const user = await Mutation.createUser({}, { username, email, password })
     expect(user.username).toEqual(username)
     expect(user.email).toEqual(email)
+    expect(user.password).not.toBe(password)
   })
 })

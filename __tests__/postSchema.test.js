@@ -9,6 +9,7 @@ const { MONGO_URL_DEV } = require('../consts')
 describe('post schema', () => {
   const userData = {
     _id: '5abba8e47af4d91c259e12ef',
+    password: 'test',
     username: 'User1',
     email: 'User1@gql.com',
     createdAt: '2018-12-12T13:00:00',
