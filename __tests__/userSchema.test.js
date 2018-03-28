@@ -3,7 +3,7 @@ jest.mock('axios')
 const { graphql } = require('graphql')
 const schema = require('../schema')
 
-describe('User schema', () => {
+describe('User GQL schema', () => {
   it('should respond with a list of users', async () => {
     const query = `
       {

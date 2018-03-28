@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`User schema should respond with a list of users 1`] = `
+exports[`User GQL schema should respond with a list of users 1`] = `
 Array [
   Object {
     "createdAt": "2018-12-12T13:00:00",
@@ -61,7 +61,7 @@ Array [
 ]
 `;
 
-exports[`User schema should respond with an object of a particular user 1`] = `
+exports[`User GQL schema should respond with an object of a particular user 1`] = `
 Object {
   "createdAt": "2018-12-12T13:00:00",
   "email": "User1@gql.com",

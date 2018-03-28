@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mongoose \`Post\` schema should create 1 post 1`] = `
+Array [
+  Object {
+    "__v": 0,
+    "_id": "5abba8e47af4d91c259e12ee",
+    "author": "5abba8e47af4d91c259e12ef",
+    "createdAt": "2018-10-10T13:00:00",
+    "editedAt": "2018-10-10T13:00:00",
+    "message": "Some message",
+  },
+]
+`;

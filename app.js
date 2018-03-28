@@ -5,6 +5,7 @@ const logger = require('morgan')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const { graphiqlExpress, graphqlExpress } = require('apollo-server-express')
+const mongoose = require('mongoose')
 
 const schema = require('./schema')
 
@@ -17,6 +18,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+
+mongoose.connect('mongodb://localhost/forum-gql')
+const db = mongoose.connection
+db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }))
 app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }))
