@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 const { graphiqlExpress, graphqlExpress } = require('apollo-server-express')
 const mongoose = require('mongoose')
 
+const { MONGO_URL_DEV } = require('./consts')
 const schema = require('./schema')
 
 const app = express()
@@ -19,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-mongoose.connect('mongodb://localhost/forum-gql')
+mongoose.connect(MONGO_URL_DEV)
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 

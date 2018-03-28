@@ -59,12 +59,6 @@ describe('post schema', () => {
             email
             createdAt
             lastLogin
-            posts {
-              _id 
-              createdAt 
-              editedAt
-              message
-            }
           }
           createdAt
           editedAt
@@ -91,12 +85,6 @@ describe('post schema', () => {
             email
             createdAt
             lastLogin
-            posts {
-              _id 
-              createdAt 
-              editedAt
-              message
-            }
           }
           createdAt
           editedAt
@@ -112,10 +100,14 @@ describe('post schema', () => {
 
   it('should create a post', async () => {
     const message = 'Hello world!'
+    const { _id } = userData
 
     const query = `
       mutation {
-        createPost(message: "${message}") {
+        createPost(
+          message: "${message}"
+          author: "${_id}"
+        ) {
           _id
           author {
             _id

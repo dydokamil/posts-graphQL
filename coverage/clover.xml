@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1522259480751" clover="3.2.0">
-  <project timestamp="1522259480751" name="All files">
-    <metrics statements="58" coveredstatements="58" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="9" elements="67" coveredelements="67" complexity="0" loc="58" ncloc="58" packages="2" files="6" classes="6">
+<coverage generated="1522262494579" clover="3.2.0">
+  <project timestamp="1522262494579" name="All files">
+    <metrics statements="59" coveredstatements="59" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="9" elements="68" coveredelements="68" complexity="0" loc="59" ncloc="59" packages="2" files="6" classes="6">
       <package name="forum-gql">
-        <metrics statements="46" coveredstatements="46" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
+        <metrics statements="47" coveredstatements="47" conditionals="0" coveredconditionals="0" methods="7" coveredmethods="7"/>
         <file name="app.js" path="/Users/kamildydo/Projects/express-projs/forum-gql/app.js">
-          <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+          <metrics statements="21" coveredstatements="21" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
           <line num="1" count="1" type="stmt"/>
           <line num="2" count="1" type="stmt"/>
           <line num="4" count="1" type="stmt"/>
@@ -14,18 +14,19 @@
           <line num="7" count="1" type="stmt"/>
           <line num="8" count="1" type="stmt"/>
           <line num="10" count="1" type="stmt"/>
-          <line num="12" count="1" type="stmt"/>
-          <line num="16" count="1" type="stmt"/>
+          <line num="11" count="1" type="stmt"/>
+          <line num="13" count="1" type="stmt"/>
           <line num="17" count="1" type="stmt"/>
           <line num="18" count="1" type="stmt"/>
           <line num="19" count="1" type="stmt"/>
           <line num="20" count="1" type="stmt"/>
-          <line num="22" count="1" type="stmt"/>
+          <line num="21" count="1" type="stmt"/>
           <line num="23" count="1" type="stmt"/>
           <line num="24" count="1" type="stmt"/>
-          <line num="26" count="1" type="stmt"/>
+          <line num="25" count="1" type="stmt"/>
           <line num="27" count="1" type="stmt"/>
-          <line num="29" count="1" type="stmt"/>
+          <line num="28" count="1" type="stmt"/>
+          <line num="30" count="1" type="stmt"/>
         </file>
         <file name="consts.js" path="/Users/kamildydo/Projects/express-projs/forum-gql/consts.js">
           <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
@@ -60,7 +61,7 @@
           <line num="1" count="4" type="stmt"/>
           <line num="2" count="4" type="stmt"/>
           <line num="4" count="4" type="stmt"/>
-          <line num="36" count="4" type="stmt"/>
+          <line num="42" count="4" type="stmt"/>
         </file>
       </package>
       <package name="forum-gql.models">
