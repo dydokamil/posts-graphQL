@@ -54,10 +54,12 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should delete all posts', async () => {
-    await Post.removePosts()
-    const posts = await Post.find({})
-    expect(posts.length).toBe(0)
-    expect(posts).toEqual([])
+    return Post.removePosts().then(() => {
+      Post.find({}).then(posts => {
+        expect(posts.length).toBe(0)
+        expect(posts).toEqual([])
+      })
+    })
   })
 
   it('should create a user and hash their password', async () => {
@@ -65,9 +67,51 @@ describe('mongoose `Post` schema', () => {
     const email = 'User2@user.com'
     const password = 'test'
 
-    const user = await User.createUser(username, email, password)
-    expect(user.username).toBe(username)
-    expect(user.email).toBe(email)
-    expect(user.password).not.toBe(password)
+    return User.createUser(username, email, password).then(user => {
+      expect(user.username).toBe(username)
+      expect(user.email).toBe(email)
+      expect(user.password).not.toBe(password)
+    })
+  })
+
+  it('passwords match', async () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const wrongPassword = 'tset'
+
+    return User.createUser(username, email, password).then(user => {
+      expect(user.username).toBe(username)
+
+      user.comparePassword(password).then(same => {
+        expect(same).toBeTruthy()
+      })
+
+      user.comparePassword(wrongPassword).then(same => {
+        expect(same).not.toBeTruthy()
+      })
+    })
+  })
+
+  it('should get a token upon successful login', async () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const wrongPassword = 'tset'
+
+    return User.createUser(username, email, password).then(user => {
+      expect(user.username).toBe(username)
+
+      return User.login(username, password).then(token => {
+        expect(token.length).toBeGreaterThan(20)
+        User.findById(user._id).then(userWithToken => {
+          expect(userWithToken.lastLogin).toBeDefined()
+        })
+
+        return User.login(username, wrongPassword).catch(err => {
+          expect(err).toMatchSnapshot()
+        })
+      })
+    })
   })
 })

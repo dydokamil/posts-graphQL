@@ -13,7 +13,7 @@ Array [
       "lastLogin": "2018-12-12T03:14:07",
       "password": "test",
       "posts": Array [
-        "41224d776a326fb40f000002",
+        "5abba8e47af4d91c259e12ee",
       ],
       "username": "User1",
     },
@@ -36,7 +36,7 @@ Object {
     "lastLogin": "2018-12-12T03:14:07",
     "password": "test",
     "posts": Array [
-      "41224d776a326fb40f000002",
+      "5abba8e47af4d91c259e12ee",
     ],
     "username": "User1",
   },

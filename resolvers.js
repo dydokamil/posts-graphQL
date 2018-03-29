@@ -5,8 +5,6 @@ const User = require('./models/user')
 const Post = require('./models/post')
 const { MONGO_URL_DEV } = require('./consts')
 
-mongoose.connect(MONGO_URL_DEV)
-
 const resolvers = {
   Query: {
     status: () => 'GraphQL status: OK',

@@ -15,7 +15,7 @@ describe('post resolver', () => {
     email: 'User1@gql.com',
     createdAt: '2018-12-12T13:00:00',
     lastLogin: '2018-12-12T03:14:07',
-    posts: ['41224d776a326fb40f000002']
+    posts: ['5abba8e47af4d91c259e12ee']
   }
 
   const postData = {
@@ -49,6 +49,7 @@ describe('post resolver', () => {
   afterAll(done => {
     mongoose.disconnect(done)
   })
+
   it('should get a list of posts', async () => {
     const posts = await Query.posts()
     expect(posts.length).toBe(1)

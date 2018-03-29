@@ -12,3 +12,5 @@ Array [
   },
 ]
 `;
+
+exports[`mongoose \`Post\` schema should get a token upon successful login 1`] = `[Error: Password incorrect.]`;

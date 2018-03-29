@@ -1,6 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`User GQL schema should not fetch the password 1`] = `
+exports[`User GQL schema should not fetch the password using \`createUser()\` 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Cannot query field "password" on type "User".],
+  ],
+}
+`;
+
+exports[`User GQL schema should not fetch the password using \`user()\` 1`] = `
+Object {
+  "errors": Array [
+    [GraphQLError: Cannot query field "password" on type "User".],
+  ],
+}
+`;
+
+exports[`User GQL schema should not get passwords when listing users 1`] = `
 Object {
   "errors": Array [
     [GraphQLError: Cannot query field "password" on type "User".],

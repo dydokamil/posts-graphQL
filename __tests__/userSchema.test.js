@@ -3,7 +3,6 @@ const { graphql } = require('graphql')
 
 const { MONGO_URL_DEV } = require('../consts')
 const User = require('../models/user')
-const { Query } = require('../resolvers')
 const schema = require('../schema')
 
 describe('User GQL schema', () => {
@@ -115,11 +114,12 @@ describe('User GQL schema', () => {
 
     const result = await graphql(schema, query)
     const createUser = result.data.createUser
+
     expect(createUser.username).toBe(username)
     expect(createUser.email).toBe(email)
   })
 
-  it('should not fetch the password', async () => {
+  it('should not fetch the password using `createUser()`', async () => {
     const query = `
       mutation {
         createUser(
@@ -137,7 +137,58 @@ describe('User GQL schema', () => {
       } 
     `
 
-    const result = await graphql(schema, query)
-    expect(result).toMatchSnapshot()
+    const user = await graphql(schema, query)
+    expect(user.errors).toBeDefined()
+    expect(user).toMatchSnapshot()
+  })
+
+  it('should not fetch the password using `user()`', async () => {
+    const { _id } = userData
+    const query = `
+      {
+        user(_id: "${_id}") {
+          password
+          _id
+          username
+          email
+          createdAt
+          lastLogin
+          posts {
+            _id 
+            createdAt 
+            editedAt
+            message 
+          }
+        }
+      }
+    `
+
+    const user = await graphql(schema, query)
+    expect(user.errors).toBeDefined()
+    expect(user).toMatchSnapshot()
+  })
+
+  it('should not get passwords when listing users', async () => {
+    const query = `
+    {
+      users {
+        _id
+        username
+        email
+        createdAt
+        lastLogin
+        password
+        posts {
+          _id 
+          createdAt 
+          editedAt
+          message
+        }
+      }
+    } 
+  `
+    const user = await graphql(schema, query)
+    expect(user.errors).toBeDefined()
+    expect(user).toMatchSnapshot()
   })
 })

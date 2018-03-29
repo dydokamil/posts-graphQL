@@ -8,8 +8,8 @@ const PostSchema = new Schema({
   message: String
 })
 
-PostSchema.statics.removePosts = function (cb) {
-  return this.remove({}, cb)
+PostSchema.statics.removePosts = function () {
+  return this.remove({})
 }
 
 module.exports = mongoose.model('Post', PostSchema)
