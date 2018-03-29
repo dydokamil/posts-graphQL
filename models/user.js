@@ -67,8 +67,13 @@ UserSchema.statics.login = function (username, password) {
 }
 
 UserSchema.statics.verifyToken = function (userId, token) {
-  return this.findById(userId).then(user => {
-    return user.token === token
+  return jwt.verify(token, publicKey, (err, decoded) => {
+    if (err) throw err
+
+    return this.findById(userId).then(user => {
+      if (!user) throw new Error('User not found.')
+      return user.token === token
+    })
   })
 }
 
