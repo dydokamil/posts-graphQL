@@ -239,11 +239,12 @@ describe('mongoose `Post` schema', () => {
     const password = 'test'
 
     const message = 'Some message to save'
+    const badSubjectId = '4abba7e47af4d91c259e12ef'
     const cheekyToken =
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
 
     return User.createUser(username, email, password).then(user => {
-      return Post.createPost('t', cheekyToken, message).catch(err => {
+      return Post.createPost(badSubjectId, cheekyToken, message).catch(err => {
         expect(err).toMatchSnapshot()
       })
     })
@@ -344,4 +345,46 @@ describe('mongoose `Post` schema', () => {
       })
     })
   })
+
+  it('should update user password', () => {
+    expect.assertions(2)
+
+    const username = 'User3'
+    const email = 'user3@user.com'
+    const password = 'test'
+    const newPassword = 'TESTE'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return User.updatePassword(token, newPassword).then(success => {
+          expect(success).toBeTruthy()
+
+          return User.login(username, newPassword).then(token => {
+            expect(token.length).toBeGreaterThan(20)
+          })
+        })
+      })
+    })
+  })
+
+  it('should not update the password if user not authenticated', () => {
+    const newPassword = 'TESTE'
+    const username = 'User4'
+    const email = 'User4@user.com'
+    const password = 'test'
+    const cheekyToken =
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.updatePassword(cheekyToken, newPassword).catch(err =>
+        expect(err).toMatchSnapshot()
+      )
+    })
+  })
+
+  it('should edit subject message', () => {})
+
+  it('should edit post message', () => {})
+  it('should delete a post', () => {})
+  it('should delete a subject', () => {})
 })

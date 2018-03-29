@@ -33,11 +33,19 @@ UserSchema.statics.removeUsers = function () {
 UserSchema.statics.createUser = function (username, email, password) {
   const User = this
 
-  return bcrypt.hash(password, 10).then(hash => {
+  return hashPassword(password).then(hash => {
     const user = new User({ username, email, password: hash })
     return user.save()
   })
 }
+
+function hashPassword (password) {
+  return bcrypt.hash(password, 10).then(hash => {
+    return hash
+  })
+}
+
+UserSchema.statics.hashPassword = hashPassword
 
 UserSchema.methods.comparePassword = function (password) {
   return bcrypt.compare(password, this.password).then(same => same)
@@ -73,6 +81,20 @@ UserSchema.statics.verifyToken = function (userId, token) {
     return this.findById(userId).then(user => {
       if (!user) throw new Error('User not found.')
       return user.token === token
+    })
+  })
+}
+
+UserSchema.statics.updatePassword = function (token, password) {
+  return jwt.verify(token, publicKey, (err, decoded) => {
+    if (err) throw err
+
+    return this.findOne({ token }).then(user => {
+      if (!user) throw new Error('Token invalid. Log in again.')
+
+      return hashPassword(password).then(hash => {
+        return user.update({ password: hash })
+      })
     })
   })
 }
