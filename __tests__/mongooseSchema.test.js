@@ -26,8 +26,8 @@ describe('mongoose `Post` schema', () => {
   }
 
   const subjectData = {
+    _id: '5abba8e47af4d91c258e12ef',
     author: '5abba8e47af4d91c259e12ef',
-    responses: ['5abba8e47af4d91c259e12ee'],
     createdAt: '2018-10-10T13:00:00',
     editedAt: '2018-10-10T13:00:00',
     message: 'Some other message'
@@ -214,22 +214,22 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  it('should create a post when given a valid token', () => {
-    const username = 'User2'
-    const email = 'User2@user.com'
-    const password = 'test'
+  // it('should create a post when given a valid token', () => {
+  //   const username = 'User2'
+  //   const email = 'User2@user.com'
+  //   const password = 'test'
 
-    const message = 'Some message to save'
+  //   const message = 'Some message to save'
 
-    return User.createUser(username, email, password).then(user => {
-      return User.login(username, password).then(token => {
-        return Post.createPost(token, message).then(post => {
-          expect(post.message).toBe(message)
-          expect(post.author.equals(user._id)).toBeTruthy()
-        })
-      })
-    })
-  })
+  //   return User.createUser(username, email, password).then(user => {
+  //     return User.login(username, password).then(token => {
+  //       return Post.createPost(token, message).then(post => {
+  //         expect(post.message).toBe(message)
+  //         expect(post.author.equals(user._id)).toBeTruthy()
+  //       })
+  //     })
+  //   })
+  // })
 
   it('should not create a post when given an invalid token', () => {
     expect.assertions(1)
@@ -243,8 +243,27 @@ describe('mongoose `Post` schema', () => {
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
 
     return User.createUser(username, email, password).then(user => {
-      return Post.createPost(cheekyToken, message).catch(err => {
+      return Post.createPost('t', cheekyToken, message).catch(err => {
         expect(err).toMatchSnapshot()
+      })
+    })
+  })
+
+  it('should not create a post if subject invalid', () => {
+    expect.assertions(1)
+
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const badSubjectId = '4abba7e47af4d91c259e12ef'
+
+    const message = 'Some message to save'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Post.createPost(badSubjectId, token, message).catch(err => {
+          expect(err).toMatchSnapshot()
+        })
       })
     })
   })
@@ -280,6 +299,44 @@ describe('mongoose `Post` schema', () => {
     const message = 'Some message to save'
     const cheekyToken =
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
+
+    return User.createUser(username, email, password).then(user => {
+      return Subject.createSubject(cheekyToken, message).catch(err => {
+        expect(err).toMatchSnapshot()
+      })
+    })
+  })
+
+  it('should add a response to a subject', () => {
+    expect.assertions(1)
+
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    const message = 'Some message to save'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, message).then(subject => {
+          return Post.createPost(subject._id, token, message).then(post => {
+            expect(post.subject.equals(subject._id)).toBeTruthy()
+          })
+        })
+      })
+    })
+  })
+
+  it('should not add the response to a subject when token is invalid', () => {
+    expect.assertions(1)
+
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const cheekyToken =
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
+
+    const message = 'Some message to save'
 
     return User.createUser(username, email, password).then(user => {
       return Subject.createSubject(cheekyToken, message).catch(err => {

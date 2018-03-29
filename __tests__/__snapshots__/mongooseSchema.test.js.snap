@@ -13,7 +13,11 @@ Array [
 ]
 `;
 
+exports[`mongoose \`Post\` schema should not add the response to a subject when token is invalid 1`] = `[Error: Token invalid. Please log in again.]`;
+
 exports[`mongoose \`Post\` schema should not create a new subject given an invalid token 1`] = `[Error: Token invalid. Please log in again.]`;
+
+exports[`mongoose \`Post\` schema should not create a post if subject invalid 1`] = `[Error: Subject not found.]`;
 
 exports[`mongoose \`Post\` schema should not create a post when given an invalid token 1`] = `[Error: Token invalid. Please log in again.]`;
 

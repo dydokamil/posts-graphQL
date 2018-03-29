@@ -7,7 +7,7 @@ const Schema = mongoose.Schema
 
 const SubjectSchema = new Schema({
   author: Schema.Types.ObjectId,
-  responses: { type: Schema.Types.ObjectId, ref: 'Post' },
+  responses: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   createdAt: String,
   editedAt: String,
   message: String
