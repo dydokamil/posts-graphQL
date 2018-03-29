@@ -5,32 +5,33 @@ const User = require('./user')
 
 const Schema = mongoose.Schema
 
-const PostSchema = new Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
+const SubjectSchema = new Schema({
+  author: Schema.Types.ObjectId,
+  responses: { type: Schema.Types.ObjectId, ref: 'Post' },
   createdAt: String,
   editedAt: String,
   message: String
 })
 
-PostSchema.statics.removePosts = function () {
+SubjectSchema.statics.removeSubjects = function () {
   return this.remove({})
 }
 
-PostSchema.statics.createPost = function (token, message) {
+SubjectSchema.statics.createSubject = function (token, message) {
   return User.findOne({ token })
     .then(user => {
       if (!user) throw new Error('Token invalid. Please log in again.')
-      const post = new this({
-        token,
+
+      const subject = new this({
+        author: user._id,
         message,
-        createdAt: moment.utc(),
-        author: user._id
+        createdAt: moment.utc()
       })
-      return post.save()
+      return subject.save()
     })
     .catch(err => {
       throw err
     })
 }
 
-module.exports = mongoose.model('Post', PostSchema)
+module.exports = mongoose.model('Subject', SubjectSchema)

@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const { MONGO_URL_DEV } = require('../consts')
 const Post = require('../models/post')
 const User = require('../models/user')
+const Subject = require('../models/subject')
 
 describe('mongoose `Post` schema', () => {
   const userData = {
@@ -24,11 +25,20 @@ describe('mongoose `Post` schema', () => {
     message: 'Some message'
   }
 
+  const subjectData = {
+    author: '5abba8e47af4d91c259e12ef',
+    responses: ['5abba8e47af4d91c259e12ee'],
+    createdAt: '2018-10-10T13:00:00',
+    editedAt: '2018-10-10T13:00:00',
+    message: 'Some other message'
+  }
+
   beforeAll(async () => {
     await mongoose.connect(MONGO_URL_DEV)
     // clear the database
     await Post.removePosts()
     await User.removeUsers()
+    await Subject.removeSubjects()
   })
 
   beforeEach(async () => {
@@ -37,28 +47,46 @@ describe('mongoose `Post` schema', () => {
 
     const postInstance = new Post(postData)
     await postInstance.save()
+
+    const subjectInsance = new Subject(subjectData)
+    await subjectInsance.save()
   })
 
   afterEach(async () => {
     await Post.removePosts()
     await User.removeUsers()
+    await Subject.removeSubjects()
   })
 
   afterAll(done => {
     mongoose.disconnect(done)
   })
 
-  it('should create 1 post', async () => {
-    const result = await Post.find({})
-    expect(result).toMatchSnapshot()
-    expect(result.length).toBe(1)
+  it('should create 1 post', () => {
+    return Post.find({}).then(result => {
+      expect(result).toMatchSnapshot()
+      expect(result.length).toBe(1)
+    })
   })
 
-  it('should delete all posts', async () => {
+  it('should delete all posts', () => {
+    expect.assertions(2)
+
     return Post.removePosts().then(() => {
-      Post.find({}).then(posts => {
+      return Post.find({}).then(posts => {
         expect(posts.length).toBe(0)
         expect(posts).toEqual([])
+      })
+    })
+  })
+
+  it('should delete all subjects', () => {
+    expect.assertions(2)
+
+    return Subject.removeSubjects().then(() => {
+      return Subject.find({}).then(subjects => {
+        expect(subjects.length).toBe(0)
+        expect(subjects).toEqual([])
       })
     })
   })
@@ -123,6 +151,7 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should not get a token if password is incorrect', () => {
+    expect.assertions(2)
     const username = 'User2'
     const email = 'User2@user.com'
     const password = 'test'
@@ -184,6 +213,8 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should not create a post when given an invalid token', () => {
+    expect.assertions(1)
+
     const username = 'User2'
     const email = 'User2@user.com'
     const password = 'test'
@@ -193,6 +224,44 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return Post.createPost(cheekyToken, message).catch(err => {
+        expect(err).toMatchSnapshot()
+      })
+    })
+  })
+
+  it('should create a new subject given a valid token', () => {
+    expect.assertions(4)
+
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    const message = 'Some message to save'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, message).then(subject => {
+          expect(subject.author.equals(user._id)).toBeTruthy()
+          expect(subject.message).toBeDefined()
+          expect(subject.createdAt).toBeDefined()
+          expect(subject.editedAt).not.toBeDefined()
+        })
+      })
+    })
+  })
+
+  it('should not create a new subject given an invalid token', () => {
+    expect.assertions(1)
+
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    const message = 'Some message to save'
+    const cheekyToken = '1234567890abcdef'
+
+    return User.createUser(username, email, password).then(user => {
+      return Subject.createSubject(cheekyToken, message).catch(err => {
         expect(err).toMatchSnapshot()
       })
     })
