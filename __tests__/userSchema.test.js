@@ -35,7 +35,7 @@ describe('User GQL schema', () => {
     await mongoose.disconnect(done)
   })
 
-  it('should respond with a list of users', async () => {
+  it('should respond with a list of users', () => {
     const query = `
       {
         users {
@@ -53,13 +53,14 @@ describe('User GQL schema', () => {
         }
       } 
     `
-    const result = await graphql(schema, query)
-    const users = result.data.users
-    expect(users.length).toBe(1)
-    expect(users).toMatchSnapshot()
+    return graphql(schema, query).then(result => {
+      const users = result.data.users
+      expect(users.length).toBe(1)
+      expect(users).toMatchSnapshot()
+    })
   })
 
-  it('should respond with an object of a particular user', async () => {
+  it('should respond with an object of a particular user', () => {
     const { _id } = userData
     const query = `
       {
@@ -79,13 +80,14 @@ describe('User GQL schema', () => {
       }
     `
 
-    const result = await graphql(schema, query)
-    const user = result.data.user
-    expect(user._id).toEqual(`${_id}`)
-    expect(user).toMatchSnapshot()
+    return graphql(schema, query).then(result => {
+      const user = result.data.user
+      expect(user._id).toEqual(`${_id}`)
+      expect(user).toMatchSnapshot()
+    })
   })
 
-  it('should create a user', async () => {
+  it('should create a user', () => {
     const username = 'User2'
     const email = 'User2@user.com'
     const password = 'test'
@@ -112,14 +114,14 @@ describe('User GQL schema', () => {
       } 
     `
 
-    const result = await graphql(schema, query)
-    const createUser = result.data.createUser
-
-    expect(createUser.username).toBe(username)
-    expect(createUser.email).toBe(email)
+    return graphql(schema, query).then(result => {
+      const createUser = result.data.createUser
+      expect(createUser.username).toBe(username)
+      expect(createUser.email).toBe(email)
+    })
   })
 
-  it('should not fetch the password using `createUser()`', async () => {
+  it('should not fetch the password using `createUser()`', () => {
     const query = `
       mutation {
         createUser(
@@ -137,12 +139,13 @@ describe('User GQL schema', () => {
       } 
     `
 
-    const user = await graphql(schema, query)
-    expect(user.errors).toBeDefined()
-    expect(user).toMatchSnapshot()
+    return graphql(schema, query).then(user => {
+      expect(user.errors).toBeDefined()
+      expect(user).toMatchSnapshot()
+    })
   })
 
-  it('should not fetch the password using `user()`', async () => {
+  it('should not fetch the password using `user()`', () => {
     const { _id } = userData
     const query = `
       {
@@ -163,12 +166,13 @@ describe('User GQL schema', () => {
       }
     `
 
-    const user = await graphql(schema, query)
-    expect(user.errors).toBeDefined()
-    expect(user).toMatchSnapshot()
+    return graphql(schema, query).then(user => {
+      expect(user.errors).toBeDefined()
+      expect(user).toMatchSnapshot()
+    })
   })
 
-  it('should not get passwords when listing users', async () => {
+  it('should not get passwords when listing users', () => {
     const query = `
     {
       users {
@@ -187,8 +191,9 @@ describe('User GQL schema', () => {
       }
     } 
   `
-    const user = await graphql(schema, query)
-    expect(user.errors).toBeDefined()
-    expect(user).toMatchSnapshot()
+    return graphql(schema, query).then(result => {
+      expect(result.errors).toBeDefined()
+      expect(result).toMatchSnapshot()
+    })
   })
 })
