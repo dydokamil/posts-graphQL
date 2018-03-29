@@ -49,7 +49,7 @@ describe('post schema', () => {
     mongoose.disconnect(done)
   })
 
-  it('should fetch a list of posts', async () => {
+  it('should fetch a list of posts', () => {
     const query = `
       {
         posts {
@@ -68,13 +68,14 @@ describe('post schema', () => {
       } 
     `
 
-    const result = await graphql(schema, query)
-    const posts = result.data.posts
-    expect(posts.length).toBe(1)
-    expect(posts).toMatchSnapshot()
+    return graphql(schema, query).then(result => {
+      const posts = result.data.posts
+      expect(posts.length).toBe(1)
+      expect(posts).toMatchSnapshot()
+    })
   })
 
-  it('should respond with a single post', async () => {
+  it('should respond with a single post', () => {
     const { _id } = postData
     const query = `
       {
@@ -94,12 +95,13 @@ describe('post schema', () => {
       } 
     `
 
-    const result = await graphql(schema, query)
-    const post = result.data.post
-    expect(post).toMatchSnapshot()
+    return graphql(schema, query).then(result => {
+      const post = result.data.post
+      expect(post).toMatchSnapshot()
+    })
   })
 
-  it('should create a post', async () => {
+  it('should create a post', () => {
     const message = 'Hello world!'
     const { _id } = userData
 
@@ -124,8 +126,9 @@ describe('post schema', () => {
       } 
     `
 
-    const result = await graphql(schema, query)
-    const createPost = result.data.createPost
-    expect(createPost.message).toBe(message)
+    return graphql(schema, query).then(result => {
+      const createPost = result.data.createPost
+      expect(createPost.message).toBe(message)
+    })
   })
 })

@@ -50,23 +50,26 @@ describe('post resolver', () => {
     mongoose.disconnect(done)
   })
 
-  it('should get a list of posts', async () => {
-    const posts = await Query.posts()
-    expect(posts.length).toBe(1)
-    expect(posts).toMatchSnapshot()
+  it('should get a list of posts', () => {
+    return Query.posts().then(posts => {
+      expect(posts.length).toBe(1)
+      expect(posts).toMatchSnapshot()
+    })
   })
 
-  it('should get a specific post', async () => {
+  it('should get a specific post', () => {
     const { _id } = postData
-    const user = await Query.post({}, { _id })
-    expect(user._id.equals(_id)).toBeTruthy()
-    expect(user).toMatchSnapshot()
+    return Query.post({}, { _id }).then(user => {
+      expect(user._id.equals(_id)).toBeTruthy()
+      expect(user).toMatchSnapshot()
+    })
   })
 
-  it('should create a post', async () => {
+  it('should create a post', () => {
     const message = 'Hello world!'
     const author = userData._id
-    const createPost = await Mutation.createPost({}, { message, author })
-    expect(createPost.message).toBe(message)
+    return Mutation.createPost({}, { message, author }).then(createPost => {
+      expect(createPost.message).toBe(message)
+    })
   })
 })

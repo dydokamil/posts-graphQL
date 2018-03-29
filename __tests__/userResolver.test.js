@@ -50,27 +50,30 @@ describe('user resolver', () => {
     mongoose.disconnect(done)
   })
 
-  it('should respond with users', async () => {
-    const users = await Query.users()
-    expect(users.length).toBe(1)
-    expect(users).toMatchSnapshot()
+  it('should respond with users', () => {
+    return Query.users().then(users => {
+      expect(users.length).toBe(1)
+      expect(users).toMatchSnapshot()
+    })
   })
 
-  it('should respond with a user', async () => {
+  it('should respond with a user', () => {
     const { _id } = userData
-    const user = await Query.user({}, { _id })
-    expect(user._id.equals(_id)).toBeTruthy()
-    expect(user).toMatchSnapshot()
+    return Query.user({}, { _id }).then(user => {
+      expect(user._id.equals(_id)).toBeTruthy()
+      expect(user).toMatchSnapshot()
+    })
   })
 
-  it('should create a user', async () => {
+  it('should create a user', () => {
     const username = 'User2'
     const email = 'User2@user.com'
     const password = 'test'
 
-    const user = await Mutation.createUser({}, { username, email, password })
-    expect(user.username).toEqual(username)
-    expect(user.email).toEqual(email)
-    expect(user.password).not.toBe(password)
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      expect(user.username).toEqual(username)
+      expect(user.email).toEqual(email)
+      expect(user.password).not.toBe(password)
+    })
   })
 })

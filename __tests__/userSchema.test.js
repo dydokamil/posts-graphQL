@@ -139,9 +139,9 @@ describe('User GQL schema', () => {
       } 
     `
 
-    return graphql(schema, query).then(user => {
-      expect(user.errors).toBeDefined()
-      expect(user).toMatchSnapshot()
+    return graphql(schema, query).then(result => {
+      expect(result.errors).toBeDefined()
+      expect(result).toMatchSnapshot()
     })
   })
 
@@ -166,9 +166,9 @@ describe('User GQL schema', () => {
       }
     `
 
-    return graphql(schema, query).then(user => {
-      expect(user.errors).toBeDefined()
-      expect(user).toMatchSnapshot()
+    return graphql(schema, query).then(result => {
+      expect(result.errors).toBeDefined()
+      expect(result).toMatchSnapshot()
     })
   })
 
