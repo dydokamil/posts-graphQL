@@ -13,4 +13,6 @@ Array [
 ]
 `;
 
-exports[`mongoose \`Post\` schema should get a token upon successful login 1`] = `[Error: Password incorrect.]`;
+exports[`mongoose \`Post\` schema should not create a post when given an invalid token 1`] = `[Error: User not found]`;
+
+exports[`mongoose \`Post\` schema should not get a token if password is incorrect 1`] = `[Error: Password incorrect.]`;

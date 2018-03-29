@@ -9,6 +9,7 @@ describe('mongoose `Post` schema', () => {
     _id: '5abba8e47af4d91c259e12ef',
     password: 'test',
     username: 'User1',
+    token: '001',
     email: 'User1@gql.com',
     createdAt: '2018-12-12T13:00:00',
     lastLogin: '2018-12-12T03:14:07',
@@ -78,16 +79,26 @@ describe('mongoose `Post` schema', () => {
     const username = 'User2'
     const email = 'User2@user.com'
     const password = 'test'
+
+    return User.createUser(username, email, password).then(user => {
+      expect(user.username).toBe(username)
+
+      return user.comparePassword(password).then(same => {
+        expect(same).toBeTruthy()
+      })
+    })
+  })
+
+  it('passwords do not match', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
     const wrongPassword = 'tset'
 
     return User.createUser(username, email, password).then(user => {
       expect(user.username).toBe(username)
 
-      user.comparePassword(password).then(same => {
-        expect(same).toBeTruthy()
-      })
-
-      user.comparePassword(wrongPassword).then(same => {
+      return user.comparePassword(wrongPassword).then(same => {
         expect(same).not.toBeTruthy()
       })
     })
@@ -97,20 +108,92 @@ describe('mongoose `Post` schema', () => {
     const username = 'User2'
     const email = 'User2@user.com'
     const password = 'test'
-    const wrongPassword = 'tset'
 
     return User.createUser(username, email, password).then(user => {
       expect(user.username).toBe(username)
 
       return User.login(username, password).then(token => {
         expect(token.length).toBeGreaterThan(20)
-        User.findById(user._id).then(userWithToken => {
+        return User.findById(user._id).then(userWithToken => {
           expect(userWithToken.lastLogin).toBeDefined()
+          expect(userWithToken.token).toBeDefined()
         })
+      })
+    })
+  })
 
-        return User.login(username, wrongPassword).catch(err => {
-          expect(err).toMatchSnapshot()
+  it('should not get a token if password is incorrect', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const wrongPassword = 'tset'
+
+    return User.createUser(username, email, password).then(user => {
+      expect(user.username).toBe(username)
+
+      return User.login(username, wrongPassword).catch(err => {
+        expect(err).toMatchSnapshot()
+      })
+    })
+  })
+
+  it('should verify a valid token', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return User.verifyToken(user._id, token).then(valid => {
+          expect(valid).toBeTruthy()
         })
+      })
+    })
+  })
+
+  it('should not verify an invalid token', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const notReallyAToken = 'abcdef0123456789'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return User.verifyToken(user._id, notReallyAToken).then(valid => {
+          expect(valid).not.toBeTruthy()
+        })
+      })
+    })
+  })
+
+  it('should create a post when given a valid token', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    const message = 'Some message to save'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Post.createPost(token, message).then(post => {
+          expect(post.message).toBe(message)
+          expect(post.author.equals(user._id)).toBeTruthy()
+        })
+      })
+    })
+  })
+
+  it('should not create a post when given an invalid token', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    const message = 'Some message to save'
+    const cheekyToken = '1234567890abcdef'
+
+    return User.createUser(username, email, password).then(user => {
+      return Post.createPost(cheekyToken, message).catch(err => {
+        expect(err).toMatchSnapshot()
       })
     })
   })

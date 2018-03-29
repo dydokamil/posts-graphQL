@@ -52,11 +52,9 @@ UserSchema.statics.login = function (username, password) {
           if (!same) throw new Error('Password incorrect.')
           else {
             const token = getNewToken()
-            return user
-              .update({ token, lastLogin: moment.utc() })
-              .then(something => {
-                return token
-              })
+            return user.update({ token, lastLogin: moment.utc() }).then(() => {
+              return token
+            })
           }
         })
         .catch(err => {
@@ -66,6 +64,12 @@ UserSchema.statics.login = function (username, password) {
     .catch(err => {
       throw err
     })
+}
+
+UserSchema.statics.verifyToken = function (userId, token) {
+  return this.findById(userId).then(user => {
+    return user.token === token
+  })
 }
 
 module.exports = mongoose.model('User', UserSchema)
