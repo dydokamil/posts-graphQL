@@ -27,6 +27,10 @@ exports[`mongoose \`Post\` schema should not delete a post when token is invalid
 
 exports[`mongoose \`Post\` schema should not delete non-existent post 1`] = `[Error: Post not found.]`;
 
+exports[`mongoose \`Post\` schema should not delete posts when author is wrong 1`] = `[Error: Authentication error.]`;
+
+exports[`mongoose \`Post\` schema should not delete subject when token is wrong 1`] = `[TokenExpiredError: jwt expired]`;
+
 exports[`mongoose \`Post\` schema should not edit post message given an invalid token 1`] = `[TokenExpiredError: jwt expired]`;
 
 exports[`mongoose \`Post\` schema should not edit the subject given a wrong author 1`] = `[Error: Authentication error]`;

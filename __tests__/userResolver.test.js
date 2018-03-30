@@ -63,10 +63,14 @@ describe('user resolver', () => {
     const { _id } = userData
 
     const userInstance = new User(userData)
+    const postInstance = new Post(postData)
+
     return userInstance.save().then(() => {
-      return Query.user({}, { _id }).then(user => {
-        expect(user._id.equals(_id)).toBeTruthy()
-        expect(user).toMatchSnapshot()
+      return postInstance.save().then(() => {
+        return Query.user({}, { _id }).then(user => {
+          expect(user._id.equals(_id)).toBeTruthy()
+          expect(user).toMatchSnapshot()
+        })
       })
     })
   })
