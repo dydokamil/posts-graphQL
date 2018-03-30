@@ -238,22 +238,26 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should create a new subject given a valid token', () => {
-    expect.assertions(4)
+    expect.assertions(5)
 
     const username = 'User222'
     const email = 'User222@user.com'
     const password = 'test'
 
     const message = 'Some message to save'
+    const title = 'title'
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, message).then(subject => {
-          expect(subject.author.equals(user._id)).toBeTruthy()
-          expect(subject.message).toBeDefined()
-          expect(subject.createdAt).toBeDefined()
-          expect(subject.editedAt).not.toBeDefined()
-        })
+        return Subject.createSubject(token, { message, title }).then(
+          subject => {
+            expect(subject.author.equals(user._id)).toBeTruthy()
+            expect(subject.message).toBeDefined()
+            expect(subject.title).toBeDefined()
+            expect(subject.createdAt).toBeDefined()
+            expect(subject.editedAt).not.toBeDefined()
+          }
+        )
       })
     })
   })
@@ -270,7 +274,7 @@ describe('mongoose `Post` schema', () => {
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
 
     return User.createUser(username, email, password).then(user => {
-      return Subject.createSubject(cheekyToken, message).catch(err => {
+      return Subject.createSubject(cheekyToken, { message }).catch(err => {
         expect(err).toMatchSnapshot()
       })
     })
@@ -287,7 +291,7 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, message).then(subject => {
+        return Subject.createSubject(token, { message }).then(subject => {
           return Post.createPost(subject._id, token, message).then(post => {
             expect(post.subject.equals(subject._id)).toBeTruthy()
           })
@@ -308,7 +312,7 @@ describe('mongoose `Post` schema', () => {
     const message = 'Some message to save'
 
     return User.createUser(username, email, password).then(user => {
-      return Subject.createSubject(cheekyToken, message).catch(err => {
+      return Subject.createSubject(cheekyToken, { message }).catch(err => {
         expect(err).toMatchSnapshot()
       })
     })
@@ -350,26 +354,33 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  it('should edit subject message', () => {
-    expect.assertions(1)
+  it('should edit subject', () => {
+    expect.assertions(3)
 
     const message = 'message'
     const username = 'User4211'
     const email = 'User4211@user.com'
     const password = 'test'
     const newMessage = 'message2'
+    const title = 'title'
+    const newTitle = 'newTitle'
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, message).then(subject => {
-          return Subject.updateMessage(subject._id, token, newMessage).then(
-            () => {
+        return Subject.createSubject(token, { message, title }).then(
+          subject => {
+            return Subject.updateMessage(subject._id, token, {
+              message: newMessage,
+              title: newTitle
+            }).then(() => {
               return Subject.findById(subject._id).then(subjectEdited => {
                 expect(subjectEdited.message).toBe(newMessage)
+                expect(subjectEdited.title).toBe(newTitle)
+                expect(subjectEdited.editedAt).toBeDefined()
               })
-            }
-          )
-        })
+            })
+          }
+        )
       })
     })
   })
@@ -377,10 +388,12 @@ describe('mongoose `Post` schema', () => {
   it('should not edit the subject given a wrong author', () => {
     expect.assertions(2)
     const message = 'message'
+    const title = 'title'
     const username = 'User44'
     const email = 'User44@user.com'
     const password = 'test'
     const newMessage = 'message2'
+    const newTitle = 'newTitle'
 
     const username2 = 'User54'
     const email2 = 'user54@user.com'
@@ -388,18 +401,19 @@ describe('mongoose `Post` schema', () => {
     return User.createUser(username, email, password).then(user => {
       return User.createUser(username2, email2, password).then(user2 => {
         return User.login(username, password).then(token => {
-          return Subject.createSubject(token, message).then(subject => {
-            return User.login(username2, password).then(token2 => {
-              expect(token).not.toBe(token2)
-              return Subject.updateMessage(
-                subject._id,
-                token2,
-                newMessage
-              ).catch(err => {
-                expect(err).toMatchSnapshot()
+          return Subject.createSubject(token, { message, title }).then(
+            subject => {
+              return User.login(username2, password).then(token2 => {
+                expect(token).not.toBe(token2)
+                return Subject.updateMessage(subject._id, token2, {
+                  message: newMessage,
+                  title: newTitle
+                }).catch(err => {
+                  expect(err).toMatchSnapshot()
+                })
               })
-            })
-          })
+            }
+          )
         })
       })
     })

@@ -14,23 +14,27 @@ const SubjectSchema = new Schema({
   responses: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   createdAt: String,
   editedAt: String,
-  message: String
+  message: String,
+  title: String
 })
 
 SubjectSchema.statics.removeSubjects = function () {
   return this.remove({})
 }
 
-SubjectSchema.statics.createSubject = function (token, message) {
+SubjectSchema.statics.createSubject = function (token, details) {
   return User.verifyToken(token)
     .then(decoded => {
       return User.findById(decoded.userId)
         .then(user => {
           if (!user) throw new Error('Token invalid. Please log in again.')
 
+          const { message, title } = details
+
           const subject = new this({
             author: user._id,
             message,
+            title,
             createdAt: moment.utc()
           })
           return subject.save()
@@ -44,7 +48,7 @@ SubjectSchema.statics.createSubject = function (token, message) {
     })
 }
 
-SubjectSchema.statics.updateMessage = function (subjectId, token, message) {
+SubjectSchema.statics.updateMessage = function (subjectId, token, details) {
   return User.verifyToken(token)
     .then(decoded => {
       return this.findById(subjectId).then(subject => {
@@ -57,7 +61,9 @@ SubjectSchema.statics.updateMessage = function (subjectId, token, message) {
             throw new Error('Authentication error')
           }
 
-          return subject.update({ message, editedAt: moment.utc() })
+          const { message, title } = details
+
+          return subject.update({ message, title, editedAt: moment.utc() })
         })
       })
     })
