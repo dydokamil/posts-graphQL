@@ -361,7 +361,7 @@ describe('mongoose `Post` schema', () => {
     const username = 'User4211'
     const email = 'User4211@user.com'
     const password = 'test'
-    const newMessage = 'message2'
+    const newMessage = 'message225'
     const title = 'title'
     const newTitle = 'newTitle'
 
@@ -369,7 +369,7 @@ describe('mongoose `Post` schema', () => {
       return User.login(username, password).then(token => {
         return Subject.createSubject(token, { message, title }).then(
           subject => {
-            return Subject.updateMessage(subject._id, token, {
+            return Subject.updateSubject(subject._id, token, {
               message: newMessage,
               title: newTitle
             }).then(() => {
@@ -386,7 +386,7 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should not edit the subject given a wrong author', () => {
-    expect.assertions(2)
+    expect.assertions(1)
     const message = 'message'
     const title = 'title'
     const username = 'User44'
@@ -404,8 +404,7 @@ describe('mongoose `Post` schema', () => {
           return Subject.createSubject(token, { message, title }).then(
             subject => {
               return User.login(username2, password).then(token2 => {
-                expect(token).not.toBe(token2)
-                return Subject.updateMessage(subject._id, token2, {
+                return Subject.updateSubject(subject._id, token2, {
                   message: newMessage,
                   title: newTitle
                 }).catch(err => {
@@ -419,7 +418,66 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  // it('should edit post message', () => {})
+  it('should edit post message', () => {
+    expect.assertions(2)
+    const username = 'username'
+    const email = 'email'
+    const password = 'password'
+
+    const message = 'message'
+    const title = 'title'
+    const newMessage = 'newMessage'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, { message, title }).then(
+          subject => {
+            return Post.createPost(subject._id, token, message).then(post => {
+              return Post.updatePost(post._id, token, {
+                message: newMessage
+              }).then(() => {
+                return Post.findById(post._id).then(postUpdated => {
+                  expect(postUpdated.message).toBe(newMessage)
+                  expect(postUpdated.editedAt).toBeDefined()
+                })
+              })
+            })
+          }
+        )
+      })
+    })
+  })
+
+  it('should not edit post message given an invalid token', () => {
+    expect.assertions(1)
+    const username = 'username'
+    const email = 'email'
+    const password = 'password'
+
+    const message = 'message'
+    const title = 'title'
+    const newMessage = 'newMessage'
+
+    const cheekyToken =
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, { message, title }).then(
+          subject => {
+            return Post.createPost(subject._id, token, message).then(post => {
+              return Post.updatePost(post._id, cheekyToken, {
+                message: newMessage
+              }).catch(err => {
+                expect(err).toMatchSnapshot()
+              })
+            })
+          }
+        )
+      })
+    })
+  })
+
   // it('should delete a post', () => {})
   // it('should delete a subject', () => {})
 })

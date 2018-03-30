@@ -19,6 +19,8 @@ exports[`mongoose \`Post\` schema should not create a new subject given an inval
 
 exports[`mongoose \`Post\` schema should not create a post if subject invalid 1`] = `[Error: Subject not found.]`;
 
+exports[`mongoose \`Post\` schema should not edit post message given an invalid token 1`] = `[TokenExpiredError: jwt expired]`;
+
 exports[`mongoose \`Post\` schema should not edit the subject given a wrong author 1`] = `[Error: Authentication error]`;
 
 exports[`mongoose \`Post\` schema should not get a token if password is incorrect 1`] = `[Error: Password incorrect.]`;

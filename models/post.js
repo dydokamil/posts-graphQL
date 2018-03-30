@@ -38,4 +38,22 @@ PostSchema.statics.createPost = function (subjectId, token, message) {
   })
 }
 
+PostSchema.statics.updatePost = function (postId, token, details) {
+  return User.verifyToken(token)
+    .then(decoded => {
+      return this.findById(postId).then(post => {
+        if (!post.author.equals(decoded.userId)) {
+          throw new Error('Authentication error.')
+        }
+
+        const { message } = details
+
+        return post.update({ message, editedAt: moment.utc() })
+      })
+    })
+    .catch(err => {
+      throw err
+    })
+}
+
 module.exports = mongoose.model('Post', PostSchema)

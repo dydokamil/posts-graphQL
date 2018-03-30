@@ -48,7 +48,7 @@ SubjectSchema.statics.createSubject = function (token, details) {
     })
 }
 
-SubjectSchema.statics.updateMessage = function (subjectId, token, details) {
+SubjectSchema.statics.updateSubject = function (subjectId, token, details) {
   return User.verifyToken(token)
     .then(decoded => {
       return this.findById(subjectId).then(subject => {
