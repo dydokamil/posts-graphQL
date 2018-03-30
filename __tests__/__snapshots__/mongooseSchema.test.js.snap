@@ -13,16 +13,16 @@ Array [
 ]
 `;
 
-exports[`mongoose \`Post\` schema should not add the response to a subject when token is invalid 1`] = `[Error: Token invalid. Please log in again.]`;
+exports[`mongoose \`Post\` schema should not add the response to a subject when token is invalid 1`] = `[TokenExpiredError: jwt expired]`;
 
-exports[`mongoose \`Post\` schema should not create a new subject given an invalid token 1`] = `[Error: Token invalid. Please log in again.]`;
+exports[`mongoose \`Post\` schema should not create a new subject given an invalid token 1`] = `[TokenExpiredError: jwt expired]`;
 
 exports[`mongoose \`Post\` schema should not create a post if subject invalid 1`] = `[Error: Subject not found.]`;
 
-exports[`mongoose \`Post\` schema should not create a post when given an invalid token 1`] = `[Error: Token invalid. Please log in again.]`;
+exports[`mongoose \`Post\` schema should not edit the subject given a wrong author 1`] = `[Error: Authentication error]`;
 
 exports[`mongoose \`Post\` schema should not get a token if password is incorrect 1`] = `[Error: Password incorrect.]`;
 
-exports[`mongoose \`Post\` schema should not update the password if user not authenticated 1`] = `[Error: Token invalid. Log in again.]`;
+exports[`mongoose \`Post\` schema should not update the password if user not authenticated 1`] = `[TokenExpiredError: jwt expired]`;
 
-exports[`mongoose \`Post\` schema should produce an error for a non-existent user 1`] = `[Error: User not found.]`;
+exports[`mongoose \`Post\` schema should not verify an invalid token 1`] = `[TokenExpiredError: jwt expired]`;

@@ -33,11 +33,10 @@ describe('post schema', () => {
   })
 
   beforeEach(async () => {
-    const userInstance = new User(userData)
-    await userInstance.save()
-
-    const postInstance = new Post(postData)
-    await postInstance.save()
+    // const userInstance = new User(userData)
+    // await userInstance.save()
+    // const postInstance = new Post(postData)
+    // await postInstance.save()
   })
 
   afterEach(async () => {
@@ -45,8 +44,8 @@ describe('post schema', () => {
     await User.removeUsers()
   })
 
-  afterAll(done => {
-    mongoose.disconnect(done)
+  afterAll(async done => {
+    await mongoose.disconnect(done)
   })
 
   it('should fetch a list of posts', () => {
@@ -68,10 +67,13 @@ describe('post schema', () => {
       } 
     `
 
-    return graphql(schema, query).then(result => {
-      const posts = result.data.posts
-      expect(posts.length).toBe(1)
-      expect(posts).toMatchSnapshot()
+    const postInstance = new Post(postData)
+    return postInstance.save().then(() => {
+      return graphql(schema, query).then(result => {
+        const posts = result.data.posts
+        expect(posts.length).toBe(1)
+        expect(posts).toMatchSnapshot()
+      })
     })
   })
 
@@ -95,9 +97,12 @@ describe('post schema', () => {
       } 
     `
 
-    return graphql(schema, query).then(result => {
-      const post = result.data.post
-      expect(post).toMatchSnapshot()
+    const postInstance = new Post(postData)
+    return postInstance.save().then(() => {
+      return graphql(schema, query).then(result => {
+        const post = result.data.post
+        expect(post).toMatchSnapshot()
+      })
     })
   })
 

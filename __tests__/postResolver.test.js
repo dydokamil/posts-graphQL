@@ -34,11 +34,10 @@ describe('post resolver', () => {
   })
 
   beforeEach(async () => {
-    const userInstance = new User(userData)
-    await userInstance.save()
-
-    const postInstance = new Post(postData)
-    await postInstance.save()
+    // const userInstance = new User(userData)
+    // await userInstance.save()
+    // const postInstance = new Post(postData)
+    // await postInstance.save()
   })
 
   afterEach(async () => {
@@ -46,22 +45,29 @@ describe('post resolver', () => {
     await User.removeUsers()
   })
 
-  afterAll(done => {
-    mongoose.disconnect(done)
+  afterAll(async done => {
+    await mongoose.disconnect(done)
   })
 
   it('should get a list of posts', () => {
-    return Query.posts().then(posts => {
-      expect(posts.length).toBe(1)
-      expect(posts).toMatchSnapshot()
+    const postInstance = new Post(postData)
+    return postInstance.save().then(() => {
+      return Query.posts().then(posts => {
+        expect(posts.length).toBe(1)
+        expect(posts).toMatchSnapshot()
+      })
     })
   })
 
   it('should get a specific post', () => {
     const { _id } = postData
-    return Query.post({}, { _id }).then(user => {
-      expect(user._id.equals(_id)).toBeTruthy()
-      expect(user).toMatchSnapshot()
+
+    const postInstance = new Post(postData)
+    return postInstance.save().then(() => {
+      return Query.post({}, { _id }).then(user => {
+        expect(user._id.equals(_id)).toBeTruthy()
+        expect(user).toMatchSnapshot()
+      })
     })
   })
 

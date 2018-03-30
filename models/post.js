@@ -19,19 +19,21 @@ PostSchema.statics.removePosts = function () {
 }
 
 PostSchema.statics.createPost = function (subjectId, token, message) {
-  return User.findOne({ token }).then(user => {
-    if (!user) throw new Error('Token invalid. Please log in again.')
+  return User.verifyToken(token).then(decoded => {
+    return User.findById(decoded.userId).then(user => {
+      if (!user) throw new Error('Token invalid. Please log in again.')
 
-    return Subject.findById(subjectId).then(subject => {
-      if (!subject) throw new Error('Subject not found.')
-      const post = new this({
-        token,
-        message,
-        createdAt: moment.utc(),
-        author: user._id,
-        subject: subject._id
+      return Subject.findById(subjectId).then(subject => {
+        if (!subject) throw new Error('Subject not found.')
+        const post = new this({
+          token,
+          message,
+          createdAt: moment.utc(),
+          author: user._id,
+          subject: subject._id
+        })
+        return post.save()
       })
-      return post.save()
     })
   })
 }

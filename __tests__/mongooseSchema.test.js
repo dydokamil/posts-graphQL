@@ -26,7 +26,7 @@ describe('mongoose `Post` schema', () => {
   }
 
   const subjectData = {
-    _id: '5abba8e47af4d91c258e12ef',
+    _id: '4abba8e47af4d91c258e12ef',
     author: '5abba8e47af4d91c259e12ef',
     createdAt: '2018-10-10T13:00:00',
     editedAt: '2018-10-10T13:00:00',
@@ -42,14 +42,12 @@ describe('mongoose `Post` schema', () => {
   })
 
   beforeEach(async () => {
-    const userInstance = new User(userData)
-    await userInstance.save()
-
-    const postInstance = new Post(postData)
-    await postInstance.save()
-
-    const subjectInsance = new Subject(subjectData)
-    await subjectInsance.save()
+    // const userInstance = new User(userData)
+    // await userInstance.save()
+    // const postInstance = new Post(postData)
+    // await postInstance.save()
+    // const subjectInsance = new Subject(subjectData)
+    // await subjectInsance.save()
   })
 
   afterEach(async () => {
@@ -58,14 +56,20 @@ describe('mongoose `Post` schema', () => {
     await Subject.removeSubjects()
   })
 
-  afterAll(done => {
-    mongoose.disconnect(done)
+  afterAll(async done => {
+    await Post.removePosts()
+    await User.removeUsers()
+    await Subject.removeSubjects()
+    await mongoose.disconnect(done)
   })
 
   it('should create 1 post', () => {
-    return Post.find({}).then(result => {
-      expect(result).toMatchSnapshot()
-      expect(result.length).toBe(1)
+    const postInstance = new Post(postData)
+    return postInstance.save().then(() => {
+      return Post.find({}).then(result => {
+        expect(result).toMatchSnapshot()
+        expect(result.length).toBe(1)
+      })
     })
   })
 
@@ -92,8 +96,8 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should create a user and hash their password', async () => {
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User20'
+    const email = 'User20@user.com'
     const password = 'test'
 
     return User.createUser(username, email, password).then(user => {
@@ -104,8 +108,8 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('passwords match', async () => {
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User28'
+    const email = 'User28@user.com'
     const password = 'test'
 
     return User.createUser(username, email, password).then(user => {
@@ -118,8 +122,8 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('passwords do not match', () => {
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User25'
+    const email = 'User25@user.com'
     const password = 'test'
     const wrongPassword = 'tset'
 
@@ -133,8 +137,8 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should get a token upon successful login', async () => {
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User200'
+    const email = 'User200@user.com'
     const password = 'test'
 
     return User.createUser(username, email, password).then(user => {
@@ -142,18 +146,14 @@ describe('mongoose `Post` schema', () => {
 
       return User.login(username, password).then(token => {
         expect(token.length).toBeGreaterThan(20)
-        return User.findById(user._id).then(userWithToken => {
-          expect(userWithToken.lastLogin).toBeDefined()
-          expect(userWithToken.token).toBeDefined()
-        })
       })
     })
   })
 
   it('should not get a token if password is incorrect', () => {
     expect.assertions(2)
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User092'
+    const email = 'User092@user.com'
     const password = 'test'
     const wrongPassword = 'tset'
 
@@ -166,14 +166,34 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
+  it('should return different tokens for different users', () => {
+    expect.assertions(1)
+
+    const username = 'user9000'
+    const username2 = 'user9000@user.com'
+    const email = 'user9001'
+    const email2 = 'user9001@user.com'
+    const password = 'test'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.createUser(username2, email2, password).then(user2 => {
+        return User.login(username, password).then(token => {
+          return User.login(username2, password).then(token2 => {
+            expect(token).not.toBe(token2)
+          })
+        })
+      })
+    })
+  })
+
   it('should verify a valid token', () => {
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User562'
+    const email = 'User562@user.com'
     const password = 'test'
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return User.verifyToken(user._id, token).then(valid => {
+        return User.verifyToken(token).then(valid => {
           expect(valid).toBeTruthy()
         })
       })
@@ -181,71 +201,19 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should not verify an invalid token', () => {
-    const username = 'User2'
-    const email = 'User2@user.com'
+    expect.assertions(1)
+
+    const username = 'User652'
+    const email = 'User652@user.com'
     const password = 'test'
     const notReallyAToken =
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return User.verifyToken(user._id, notReallyAToken).then(valid => {
-          expect(valid).not.toBeTruthy()
-        })
-      })
-    })
-  })
-
-  it('should produce an error for a non-existent user', () => {
-    expect.assertions(1)
-
-    const username = 'User2'
-    const email = 'User2@user.com'
-    const password = 'test'
-    const nonexistentUserId = '5abba8e47af4d91c259e12ea'
-
-    const notReallyAToken =
-      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
-
-    return User.createUser(username, email, password).then(user => {
-      return User.verifyToken(nonexistentUserId, notReallyAToken).catch(err => {
-        expect(err).toMatchSnapshot()
-      })
-    })
-  })
-
-  // it('should create a post when given a valid token', () => {
-  //   const username = 'User2'
-  //   const email = 'User2@user.com'
-  //   const password = 'test'
-
-  //   const message = 'Some message to save'
-
-  //   return User.createUser(username, email, password).then(user => {
-  //     return User.login(username, password).then(token => {
-  //       return Post.createPost(token, message).then(post => {
-  //         expect(post.message).toBe(message)
-  //         expect(post.author.equals(user._id)).toBeTruthy()
-  //       })
-  //     })
-  //   })
-  // })
-
-  it('should not create a post when given an invalid token', () => {
-    expect.assertions(1)
-
-    const username = 'User2'
-    const email = 'User2@user.com'
-    const password = 'test'
-
-    const message = 'Some message to save'
-    const badSubjectId = '4abba7e47af4d91c259e12ef'
-    const cheekyToken =
-      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
-
-    return User.createUser(username, email, password).then(user => {
-      return Post.createPost(badSubjectId, cheekyToken, message).catch(err => {
-        expect(err).toMatchSnapshot()
+        return User.verifyToken(notReallyAToken).catch(err =>
+          expect(err).toMatchSnapshot()
+        )
       })
     })
   })
@@ -253,8 +221,8 @@ describe('mongoose `Post` schema', () => {
   it('should not create a post if subject invalid', () => {
     expect.assertions(1)
 
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User322'
+    const email = 'User232@user.com'
     const password = 'test'
     const badSubjectId = '4abba7e47af4d91c259e12ef'
 
@@ -272,8 +240,8 @@ describe('mongoose `Post` schema', () => {
   it('should create a new subject given a valid token', () => {
     expect.assertions(4)
 
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User222'
+    const email = 'User222@user.com'
     const password = 'test'
 
     const message = 'Some message to save'
@@ -293,8 +261,8 @@ describe('mongoose `Post` schema', () => {
   it('should not create a new subject given an invalid token', () => {
     expect.assertions(1)
 
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User122'
+    const email = 'User212@user.com'
     const password = 'test'
 
     const message = 'Some message to save'
@@ -311,8 +279,8 @@ describe('mongoose `Post` schema', () => {
   it('should add a response to a subject', () => {
     expect.assertions(1)
 
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User22'
+    const email = 'User22@user.com'
     const password = 'test'
 
     const message = 'Some message to save'
@@ -331,8 +299,8 @@ describe('mongoose `Post` schema', () => {
   it('should not add the response to a subject when token is invalid', () => {
     expect.assertions(1)
 
-    const username = 'User2'
-    const email = 'User2@user.com'
+    const username = 'User23'
+    const email = 'User23@user.com'
     const password = 'test'
     const cheekyToken =
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
@@ -349,8 +317,8 @@ describe('mongoose `Post` schema', () => {
   it('should update user password', () => {
     expect.assertions(2)
 
-    const username = 'User3'
-    const email = 'user3@user.com'
+    const username = 'User33'
+    const email = 'user33@user.com'
     const password = 'test'
     const newPassword = 'TESTE'
 
@@ -369,8 +337,8 @@ describe('mongoose `Post` schema', () => {
 
   it('should not update the password if user not authenticated', () => {
     const newPassword = 'TESTE'
-    const username = 'User4'
-    const email = 'User4@user.com'
+    const username = 'User44'
+    const email = 'User44@user.com'
     const password = 'test'
     const cheekyToken =
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
@@ -382,9 +350,62 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  it('should edit subject message', () => {})
+  it('should edit subject message', () => {
+    expect.assertions(1)
 
-  it('should edit post message', () => {})
-  it('should delete a post', () => {})
-  it('should delete a subject', () => {})
+    const message = 'message'
+    const username = 'User4211'
+    const email = 'User4211@user.com'
+    const password = 'test'
+    const newMessage = 'message2'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, message).then(subject => {
+          return Subject.updateMessage(subject._id, token, newMessage).then(
+            () => {
+              return Subject.findById(subject._id).then(subjectEdited => {
+                expect(subjectEdited.message).toBe(newMessage)
+              })
+            }
+          )
+        })
+      })
+    })
+  })
+
+  it('should not edit the subject given a wrong author', () => {
+    expect.assertions(2)
+    const message = 'message'
+    const username = 'User44'
+    const email = 'User44@user.com'
+    const password = 'test'
+    const newMessage = 'message2'
+
+    const username2 = 'User54'
+    const email2 = 'user54@user.com'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.createUser(username2, email2, password).then(user2 => {
+        return User.login(username, password).then(token => {
+          return Subject.createSubject(token, message).then(subject => {
+            return User.login(username2, password).then(token2 => {
+              expect(token).not.toBe(token2)
+              return Subject.updateMessage(
+                subject._id,
+                token2,
+                newMessage
+              ).catch(err => {
+                expect(err).toMatchSnapshot()
+              })
+            })
+          })
+        })
+      })
+    })
+  })
+
+  // it('should edit post message', () => {})
+  // it('should delete a post', () => {})
+  // it('should delete a subject', () => {})
 })

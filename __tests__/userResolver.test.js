@@ -34,11 +34,10 @@ describe('user resolver', () => {
   })
 
   beforeEach(async () => {
-    const userInstance = new User(userData)
-    await userInstance.save()
-
-    const postInstance = new Post(postData)
-    await postInstance.save()
+    // const userInstance = new User(userData)
+    // await userInstance.save()
+    // const postInstance = new Post(postData)
+    // await postInstance.save()
   })
 
   afterEach(async () => {
@@ -46,22 +45,29 @@ describe('user resolver', () => {
     await Post.removePosts()
   })
 
-  afterAll(done => {
-    mongoose.disconnect(done)
+  afterAll(async done => {
+    await mongoose.disconnect(done)
   })
 
   it('should respond with users', () => {
-    return Query.users().then(users => {
-      expect(users.length).toBe(1)
-      expect(users).toMatchSnapshot()
+    const userInstance = new User(userData)
+    return userInstance.save().then(() => {
+      return Query.users().then(users => {
+        expect(users.length).toBe(1)
+        expect(users).toMatchSnapshot()
+      })
     })
   })
 
   it('should respond with a user', () => {
     const { _id } = userData
-    return Query.user({}, { _id }).then(user => {
-      expect(user._id.equals(_id)).toBeTruthy()
-      expect(user).toMatchSnapshot()
+
+    const userInstance = new User(userData)
+    return userInstance.save().then(() => {
+      return Query.user({}, { _id }).then(user => {
+        expect(user._id.equals(_id)).toBeTruthy()
+        expect(user).toMatchSnapshot()
+      })
     })
   })
 

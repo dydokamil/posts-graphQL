@@ -8,16 +8,7 @@ Object {
   "email": "User1@gql.com",
   "lastLogin": "2018-12-12T03:14:07",
   "password": "test",
-  "posts": Array [
-    Object {
-      "__v": 0,
-      "_id": "5abba8e47af4d91c259e12ee",
-      "author": "5abba8e47af4d91c259e12ef",
-      "createdAt": "2018-10-10T13:00:00",
-      "editedAt": "2018-10-10T13:00:00",
-      "message": "Some message",
-    },
-  ],
+  "posts": Array [],
   "username": "User1",
 }
 `;
@@ -31,16 +22,7 @@ Array [
     "email": "User1@gql.com",
     "lastLogin": "2018-12-12T03:14:07",
     "password": "test",
-    "posts": Array [
-      Object {
-        "__v": 0,
-        "_id": "5abba8e47af4d91c259e12ee",
-        "author": "5abba8e47af4d91c259e12ef",
-        "createdAt": "2018-10-10T13:00:00",
-        "editedAt": "2018-10-10T13:00:00",
-        "message": "Some message",
-      },
-    ],
+    "posts": Array [],
     "username": "User1",
   },
 ]

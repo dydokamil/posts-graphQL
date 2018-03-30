@@ -7,10 +7,20 @@ const moment = require('moment')
 const publicKey = fs.readFileSync('./public.key')
 const privateKey = fs.readFileSync('./private.key')
 
-function getNewToken () {
-  return jwt.sign({}, privateKey, {
-    algorithm: 'RS256',
-    expiresIn: '18h'
+function getNewToken (userId) {
+  return new Promise(function (resolve, reject) {
+    jwt.sign(
+      { userId },
+      privateKey,
+      {
+        algorithm: 'RS256',
+        expiresIn: '18h'
+      },
+      function (err, token) {
+        if (err) reject(err)
+        else resolve(token)
+      }
+    )
   })
 }
 
@@ -22,8 +32,7 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   createdAt: String,
   lastLogin: String,
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-  token: String
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
 })
 
 UserSchema.statics.removeUsers = function () {
@@ -54,15 +63,21 @@ UserSchema.methods.comparePassword = function (password) {
 UserSchema.statics.login = function (username, password) {
   return this.findOne({ username })
     .then(user => {
+      if (!user) throw new Error('User not found!')
       return user
         .comparePassword(password)
         .then(same => {
           if (!same) throw new Error('Password incorrect.')
           else {
-            const token = getNewToken()
-            return user.update({ token, lastLogin: moment.utc() }).then(() => {
-              return token
-            })
+            return getNewToken(user._id)
+              .then(token => {
+                return user.update({ lastLogin: moment.utc() }).then(() => {
+                  return token
+                })
+              })
+              .catch(err => {
+                throw err
+              })
           }
         })
         .catch(err => {
@@ -74,29 +89,47 @@ UserSchema.statics.login = function (username, password) {
     })
 }
 
-UserSchema.statics.verifyToken = function (userId, token) {
-  return jwt.verify(token, publicKey, (err, decoded) => {
-    if (err) throw err
-
-    return this.findById(userId).then(user => {
-      if (!user) throw new Error('User not found.')
-      return user.token === token
+UserSchema.statics.verifyToken = function (token) {
+  return new Promise(function (resolve, reject) {
+    jwt.verify(token, publicKey, (err, decoded) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(decoded)
+      }
     })
   })
 }
 
+// UserSchema.statics.tokenBelongsToUser = function (userId, token) {
+//   return UserSchema.statics
+//     .verifyToken(token)
+//     .then(decoded => {
+//       return this.findById(userId).then(user => {
+//         if (!user) throw new Error('User not found.')
+//         return user.token === token
+//       })
+//     })
+//     .catch(err => {
+//       throw err
+//     })
+// }
+
 UserSchema.statics.updatePassword = function (token, password) {
-  return jwt.verify(token, publicKey, (err, decoded) => {
-    if (err) throw err
+  return UserSchema.statics
+    .verifyToken(token)
+    .then(decoded => {
+      return this.findById(decoded.userId).then(user => {
+        if (!user) throw new Error('Token invalid. Log in again.')
 
-    return this.findOne({ token }).then(user => {
-      if (!user) throw new Error('Token invalid. Log in again.')
-
-      return hashPassword(password).then(hash => {
-        return user.update({ password: hash })
+        return hashPassword(password).then(hash => {
+          return user.update({ password: hash })
+        })
       })
     })
-  })
+    .catch(err => {
+      throw err
+    })
 }
 
 module.exports = mongoose.model('User', UserSchema)

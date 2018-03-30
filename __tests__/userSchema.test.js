@@ -23,8 +23,8 @@ describe('User GQL schema', () => {
   })
 
   beforeEach(async () => {
-    const userInstance = new User(userData)
-    await userInstance.save()
+    // const userInstance = new User(userData)
+    // await userInstance.save()
   })
 
   afterEach(async () => {
@@ -32,6 +32,7 @@ describe('User GQL schema', () => {
   })
 
   afterAll(async done => {
+    await User.removeUsers()
     await mongoose.disconnect(done)
   })
 
@@ -53,10 +54,13 @@ describe('User GQL schema', () => {
         }
       } 
     `
-    return graphql(schema, query).then(result => {
-      const users = result.data.users
-      expect(users.length).toBe(1)
-      expect(users).toMatchSnapshot()
+    const userInstance = new User(userData)
+    return userInstance.save().then(() => {
+      return graphql(schema, query).then(result => {
+        const users = result.data.users
+        expect(users.length).toBe(1)
+        expect(users).toMatchSnapshot()
+      })
     })
   })
 
@@ -80,10 +84,13 @@ describe('User GQL schema', () => {
       }
     `
 
-    return graphql(schema, query).then(result => {
-      const user = result.data.user
-      expect(user._id).toEqual(`${_id}`)
-      expect(user).toMatchSnapshot()
+    const userInstance = new User(userData)
+    return userInstance.save().then(() => {
+      return graphql(schema, query).then(result => {
+        const user = result.data.user
+        expect(user._id).toEqual(`${_id}`)
+        expect(user).toMatchSnapshot()
+      })
     })
   })
 

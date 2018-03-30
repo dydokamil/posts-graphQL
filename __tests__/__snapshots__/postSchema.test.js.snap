@@ -4,13 +4,7 @@ exports[`post schema should fetch a list of posts 1`] = `
 Array [
   Object {
     "_id": "5abba8e47af4d91c259e12ee",
-    "author": Object {
-      "_id": "5abba8e47af4d91c259e12ef",
-      "createdAt": "2018-12-12T13:00:00",
-      "email": "User1@gql.com",
-      "lastLogin": "2018-12-12T03:14:07",
-      "username": "User1",
-    },
+    "author": null,
     "createdAt": "2018-10-10T13:00:00",
     "editedAt": "2018-10-10T13:00:00",
     "message": "Some message",
@@ -21,13 +15,7 @@ Array [
 exports[`post schema should respond with a single post 1`] = `
 Object {
   "_id": "5abba8e47af4d91c259e12ee",
-  "author": Object {
-    "_id": "5abba8e47af4d91c259e12ef",
-    "createdAt": "2018-12-12T13:00:00",
-    "email": "User1@gql.com",
-    "lastLogin": "2018-12-12T03:14:07",
-    "username": "User1",
-  },
+  "author": null,
   "createdAt": "2018-10-10T13:00:00",
   "editedAt": "2018-10-10T13:00:00",
   "message": "Some message",
