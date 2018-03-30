@@ -514,6 +514,116 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  // it('should delete a post', () => {})
+  it('should delete a post', () => {
+    expect.assertions(1)
+    const username = 'username'
+    const email = 'email'
+    const password = 'password'
+
+    const message = 'message'
+    const title = 'title'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, { message, title }).then(
+          subject => {
+            return Post.createPost(subject._id, token, message).then(post => {
+              return Post.deletePost(post._id, token).then(success => {
+                expect(success).toBeTruthy()
+              })
+            })
+          }
+        )
+      })
+    })
+  })
+
+  it('should not delete a post when token is invalid', () => {
+    expect.assertions(1)
+    const username = 'username'
+    const email = 'email'
+    const password = 'password'
+
+    const message = 'message'
+    const title = 'title'
+
+    const cheekyToken =
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, { message, title }).then(
+          subject => {
+            return Post.createPost(subject._id, token, message).then(post => {
+              return Post.deletePost(post._id, cheekyToken).catch(err => {
+                expect(err).toMatchSnapshot()
+              })
+            })
+          }
+        )
+      })
+    })
+  })
+  it('should not delete a post when author is invalid', () => {
+    expect.assertions(1)
+    const username = 'username'
+    const email = 'email'
+    const password = 'password'
+
+    const username2 = 'username2'
+    const email2 = 'email2'
+
+    const message = 'message'
+    const title = 'title'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.createUser(username2, email2, password).then(user2 => {
+        return User.login(username, password).then(token => {
+          return User.login(username2, password).then(token2 => {
+            return Subject.createSubject(token, { message, title }).then(
+              subject => {
+                return Post.createPost(subject._id, token, message).then(
+                  post => {
+                    return Post.deletePost(post._id, token2).catch(err => {
+                      expect(err).toMatchSnapshot()
+                    })
+                  }
+                )
+              }
+            )
+          })
+        })
+      })
+    })
+  })
+
+  it('should not delete non-existent post', () => {
+    expect.assertions(1)
+    const username = 'username'
+    const email = 'email'
+    const password = 'password'
+
+    const username2 = 'username2'
+    const email2 = 'email2'
+
+    const message = 'message'
+    const title = 'title'
+
+    const badPostId = '507f1f77bcf86cd799439011'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.login(username, password).then(token => {
+        return Subject.createSubject(token, { message, title }).then(
+          subject => {
+            return Post.createPost(subject._id, token, message).then(post => {
+              return Post.deletePost(badPostId, token).catch(err => {
+                expect(err).toMatchSnapshot()
+              })
+            })
+          }
+        )
+      })
+    })
+  })
   // it('should delete a subject', () => {})
 })

@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const moment = require('moment')
 
+const Post = require('./post')
+
 const publicKey = fs.readFileSync('./public.key')
 const privateKey = fs.readFileSync('./private.key')
 

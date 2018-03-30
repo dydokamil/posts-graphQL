@@ -56,4 +56,22 @@ PostSchema.statics.updatePost = function (postId, token, details) {
     })
 }
 
+PostSchema.statics.deletePost = function (postId, token) {
+  return User.verifyToken(token)
+    .then(decoded => {
+      return this.findById(postId).then(post => {
+        if (!post) throw new Error('Post not found.')
+
+        if (!post.author.equals(decoded.userId)) {
+          throw new Error('Authencitation error')
+        }
+
+        return post.remove()
+      })
+    })
+    .catch(err => {
+      throw err
+    })
+}
+
 module.exports = mongoose.model('Post', PostSchema)
