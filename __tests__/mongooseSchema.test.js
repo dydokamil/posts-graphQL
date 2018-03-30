@@ -478,6 +478,42 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
+  it('should not allow other users to edit the post', () => {
+    expect.assertions(1)
+    const username = 'username'
+    const email = 'email'
+    const password = 'password'
+
+    const username2 = 'username2'
+    const email2 = 'email2'
+
+    const message = 'message'
+    const title = 'title'
+    const newMessage = 'newMessage'
+
+    return User.createUser(username, email, password).then(user => {
+      return User.createUser(username2, email2, password).then(user2 => {
+        return User.login(username, password).then(token => {
+          return User.login(username2, password).then(token2 => {
+            return Subject.createSubject(token, { message, title }).then(
+              subject => {
+                return Post.createPost(subject._id, token, message).then(
+                  post => {
+                    return Post.updatePost(post._id, token2, {
+                      message: newMessage
+                    }).catch(err => {
+                      expect(err).toMatchSnapshot()
+                    })
+                  }
+                )
+              }
+            )
+          })
+        })
+      })
+    })
+  })
+
   // it('should delete a post', () => {})
   // it('should delete a subject', () => {})
 })

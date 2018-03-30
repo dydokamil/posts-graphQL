@@ -15,6 +15,8 @@ Array [
 
 exports[`mongoose \`Post\` schema should not add the response to a subject when token is invalid 1`] = `[TokenExpiredError: jwt expired]`;
 
+exports[`mongoose \`Post\` schema should not allow other users to edit the post 1`] = `[Error: Authentication error.]`;
+
 exports[`mongoose \`Post\` schema should not create a new subject given an invalid token 1`] = `[TokenExpiredError: jwt expired]`;
 
 exports[`mongoose \`Post\` schema should not create a post if subject invalid 1`] = `[Error: Subject not found.]`;
