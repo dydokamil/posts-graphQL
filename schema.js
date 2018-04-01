@@ -29,7 +29,8 @@ const typeDefs = `
     user(_id: ID): User
     posts: [Post]
     post(_id: ID): Post
-    
+    subject(_id: ID): Subject
+    subjects: [Subject]
   }
 
   type Subject {
@@ -70,6 +71,13 @@ const typeDefs = `
       token: String!
       password: String!
     ): Int
+
+    updateSubject(
+      subjectId: String!
+      token: String!
+      message: String!
+      title: String!
+    ): Subject
   }
 `
 

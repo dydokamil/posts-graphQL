@@ -19,6 +19,10 @@ const resolvers = {
     posts: () => Post.find({}).populate('author'),
     post: (obj, args) => {
       return Post.findOne({ ...args }).populate('author')
+    },
+    subjects: () => Subject.find({}),
+    subject: (obj, args) => {
+      return Subject.findOne({ ...args })
     }
   },
   Mutation: {
@@ -44,6 +48,11 @@ const resolvers = {
       const { token, password } = args
 
       return User.updatePassword(token, password)
+    },
+    updateSubject: (obj, args) => {
+      const { subjectId, token, message, title } = args
+
+      return Subject.updateSubject(subjectId, token, { message, title })
     }
   }
 }

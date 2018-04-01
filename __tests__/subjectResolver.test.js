@@ -4,7 +4,7 @@ const { MONGO_URL_DEV } = require('../consts')
 const Subject = require('../models/subject')
 const User = require('../models/user')
 // const resolver = require('../resolvers')
-const { Mutation } = require('../resolvers')
+const { Query, Mutation } = require('../resolvers')
 
 describe('subject resolver', () => {
   beforeAll(async () => {
@@ -73,6 +73,45 @@ describe('subject resolver', () => {
         ).catch(response => {
           expect(response).toMatchSnapshot()
         })
+      })
+    })
+  })
+
+  it('should update a subject', () => {
+    const username = 'User2'
+    const email = 'user2@user.com'
+    const password = 'test2'
+
+    const message = 'some message2'
+    const title = 'some title2'
+
+    const newMessage = 'some new message'
+    const newTitle = 'some new title'
+
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      return Mutation.login({}, { username, password }).then(loginResult => {
+        const { token } = loginResult
+
+        return Mutation.createSubject({}, { token, message, title }).then(
+          subject => {
+            const subjectId = subject._id
+            return Mutation.updateSubject(
+              {},
+              {
+                subjectId,
+                token,
+                message: newMessage,
+                title: newTitle
+              }
+            ).then(() => {
+              Query.subject({ _id: subjectId }).then(subjectUpdated => {
+                expect(subjectUpdated.message).toBe(newMessage)
+                expect(subjectUpdated.title).toBe(newTitle)
+                expect(subjectUpdated.editedAt).toBeDefined()
+              })
+            })
+          }
+        )
       })
     })
   })

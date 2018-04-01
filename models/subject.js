@@ -95,7 +95,9 @@ SubjectSchema.statics.updateSubject = function (subjectId, token, details) {
 
           const { message, title } = details
 
-          return subject.update({ message, title, editedAt: moment.utc() })
+          return subject
+            .update({ message, title, editedAt: moment.utc() })
+            .then(result => result.ok)
         })
       })
     })
