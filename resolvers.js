@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 
 const User = require('./models/user')
 const Post = require('./models/post')
+const Subject = require('./models/subject')
+
 const { MONGO_URL_DEV } = require('./consts')
 
 const resolvers = {
@@ -34,6 +36,10 @@ const resolvers = {
     login: (obj, args) => {
       const { username, password } = args
       return User.login(username, password)
+    },
+    createSubject: (obj, args) => {
+      const { token, message, title } = args
+      return Subject.createSubject(token, { message, title })
     }
   }
 }

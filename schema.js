@@ -32,6 +32,15 @@ const typeDefs = `
     
   }
 
+  type Subject {
+    author: User
+    responses: [Post],
+    createdAt: String,
+    editedAt: String,
+    message: String,
+    title: String
+  }
+
   type Mutation {
     createPost(
       message: String
@@ -48,6 +57,12 @@ const typeDefs = `
       username: String! 
       password: String!
     ): Token
+
+    createSubject(
+      token: String
+      message: String
+      title: String
+    ): Subject
   }
 `
 
