@@ -98,4 +98,26 @@ describe('user resolver', () => {
       })
     })
   })
+
+  it('should change user password', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const password2 = 'test2'
+
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      return Mutation.login({}, { username, password }).then(login => {
+        const { token } = login
+        expect(token.length).toBeGreaterThan(50)
+
+        return Mutation.updatePassword({}, { token, password: password2 }).then(
+          () => {
+            return Mutation.login({}, { username, password }).catch(login => {
+              expect(login).toMatchSnapshot()
+            })
+          }
+        )
+      })
+    })
+  })
 })

@@ -71,11 +71,35 @@ describe('post resolver', () => {
     })
   })
 
-  it('should create a post', () => {
-    const message = 'Hello world!'
-    const author = userData._id
-    return Mutation.createPost({}, { message, author }).then(createPost => {
-      expect(createPost.message).toBe(message)
+  it('should create a subject, then post', () => {
+    const username = 'User2'
+    const email = 'user2@user.com'
+    const password = 'test2'
+
+    const message = 'some message2'
+    const title = 'some title2'
+
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      return Mutation.login({}, { username, password }).then(loginResult => {
+        const { token } = loginResult
+
+        return Mutation.createSubject({}, { token, message, title }).then(
+          subject => {
+            const subjectId = subject._id
+
+            return Mutation.createPost(
+              {},
+              {
+                subjectId,
+                token,
+                message
+              }
+            ).then(subjectUpdated => {
+              expect(subjectUpdated.responses.length).toBe(1)
+            })
+          }
+        )
+      })
     })
   })
 })

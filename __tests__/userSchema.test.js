@@ -296,4 +296,68 @@ describe('User GQL schema', () => {
       })
     })
   })
+
+  it('should update user password', () => {
+    expect.assertions(3)
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+    const password2 = 'testTEST'
+
+    const query = `
+      mutation {
+        createUser(
+          username: "${username}" 
+          email: "${email}"
+          password: "${password}"
+        ) {
+          _id
+          username
+          email
+          createdAt
+          lastLogin
+          posts {
+            _id 
+            createdAt 
+            editedAt
+            message  
+          }
+        }
+      } 
+    `
+
+    const loginQuery = `
+      mutation {
+        login(
+          username: "${username}"
+          password: "${password}"
+        ) {
+          token
+        }
+      }
+    `
+
+    return graphql(schema, query).then(result => {
+      return graphql(schema, loginQuery).then(result2 => {
+        const { token } = result2.data.login
+        expect(token.length).toBeGreaterThan(50)
+
+        const updatePasswordQuery = `
+          mutation {
+            updatePassword(
+              token: "${token}"
+              password: "${password2}"
+            )
+          } 
+        `
+
+        return graphql(schema, updatePasswordQuery).then(result => {
+          return graphql(schema, loginQuery).then(err => {
+            expect(err.errors).toBeDefined()
+            expect(err).toMatchSnapshot()
+          })
+        })
+      })
+    })
+  })
 })

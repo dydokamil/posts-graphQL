@@ -106,34 +106,96 @@ describe('post schema', () => {
     })
   })
 
-  it('should create a post', () => {
-    const message = 'Hello world!'
-    const { _id } = userData
+  it('should create a subject, then post', () => {
+    const username = 'User'
+    const email = 'user@user.com'
+    const password = 'test'
 
-    const query = `
+    const createUserQuery = `
       mutation {
-        createPost(
-          message: "${message}"
-          author: "${_id}"
+        createUser(
+          username: "${username}"
+          email: "${email}"
+          password: "${password}"
         ) {
-          _id
-          author {
-            _id
-            username
-            email
-            createdAt
-            lastLogin
-          }
-          createdAt
-          editedAt
-          message
+          username
         }
       } 
     `
 
-    return graphql(schema, query).then(result => {
-      const createPost = result.data.createPost
-      expect(createPost.message).toBe(message)
+    const loginQuery = `
+      mutation {
+        login(
+          username: "${username}"
+          password: "${password}"
+        ) {
+          token
+        }
+      }
+    `
+
+    return graphql(schema, createUserQuery).then(user => {
+      return graphql(schema, loginQuery).then(result => {
+        const message = 'Some message'
+        const title = 'Some title'
+
+        const { token } = result.data.login
+
+        const createSubjectQuery = `
+          mutation {
+            createSubject(
+              token: "${token}"
+              message: "${message}"
+              title: "${title}"
+            ) {
+              _id
+              createdAt
+              message
+              title
+              author {
+                username
+              }
+            }
+          } 
+        `
+
+        return graphql(schema, createSubjectQuery).then(result => {
+          const { createSubject } = result.data
+          const subjectId = createSubject._id
+
+          const postMessage = 'post message'
+
+          const createPostQuery = `
+          mutation {
+            createPost(
+              subjectId: "${subjectId}"
+              token: "${token}"
+              message: "${postMessage}"
+            ) {
+              _id
+              author {
+                _id
+                username
+                email
+                createdAt
+                lastLogin
+              }
+              createdAt
+              editedAt
+              message
+              responses {
+                _id
+              }
+            }
+          } 
+        `
+
+          return graphql(schema, createPostQuery).then(result => {
+            const subjectWithResponse = result.data.createPost
+            expect(subjectWithResponse.responses.length).toBe(1)
+          })
+        })
+      })
     })
   })
 })

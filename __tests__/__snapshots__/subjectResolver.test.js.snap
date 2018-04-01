@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`subject resolver should return an error given an invalid token 1`] = `[TokenExpiredError: jwt expired]`;

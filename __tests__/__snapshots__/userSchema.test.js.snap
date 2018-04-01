@@ -58,3 +58,14 @@ Object {
   "username": "User1",
 }
 `;
+
+exports[`User GQL schema should update user password 1`] = `
+Object {
+  "data": Object {
+    "login": null,
+  },
+  "errors": Array [
+    [GraphQLError: Password incorrect.],
+  ],
+}
+`;

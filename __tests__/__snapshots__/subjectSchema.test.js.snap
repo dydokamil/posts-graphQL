@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`subject schema GQL should not create a subject given an invalid token 1`] = `
+Object {
+  "data": Object {
+    "createSubject": null,
+  },
+  "errors": Array [
+    [GraphQLError: jwt expired],
+  ],
+}
+`;

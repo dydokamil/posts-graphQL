@@ -125,7 +125,7 @@ UserSchema.statics.updatePassword = function (token, password) {
         if (!user) throw new Error('Token invalid. Log in again.')
 
         return hashPassword(password).then(hash => {
-          return user.update({ password: hash })
+          return user.update({ password: hash }).then(result => result.ok)
         })
       })
     })

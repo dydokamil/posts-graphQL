@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`user resolver should change user password 1`] = `[Error: Password incorrect.]`;
+
 exports[`user resolver should respond with a user 1`] = `
 Object {
   "__v": 0,

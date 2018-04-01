@@ -28,10 +28,9 @@ const resolvers = {
       return user
     },
     createPost: (obj, args) => {
-      const { message, author } = args
+      const { subjectId, token, message } = args
 
-      const post = new Post({ message, author })
-      return post.save()
+      return Subject.createPost(subjectId, token, message)
     },
     login: (obj, args) => {
       const { username, password } = args
@@ -40,6 +39,11 @@ const resolvers = {
     createSubject: (obj, args) => {
       const { token, message, title } = args
       return Subject.createSubject(token, { message, title })
+    },
+    updatePassword: (obj, args) => {
+      const { token, password } = args
+
+      return User.updatePassword(token, password)
     }
   }
 }

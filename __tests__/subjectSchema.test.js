@@ -84,4 +84,35 @@ describe('subject schema GQL', () => {
       })
     })
   })
+
+  it('should not create a subject given an invalid token', () => {
+    expect.assertions(1)
+
+    const cheekyToken =
+      'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
+
+    const message = 'Some message'
+    const title = 'Some title'
+
+    const createSubjectQuery = `
+      mutation {
+        createSubject(
+          token: "${cheekyToken}"
+          message: "${message}"
+          title: "${title}"
+        ) {
+          createdAt
+          message
+          title
+          author {
+            username
+          }
+        }
+      } 
+    `
+
+    return graphql(schema, createSubjectQuery).then(result => {
+      expect(result).toMatchSnapshot()
+    })
+  })
 })
