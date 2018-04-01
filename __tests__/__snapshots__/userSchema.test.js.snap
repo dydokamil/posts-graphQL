@@ -1,5 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`User GQL schema should get an error upon unsuccessful login 1`] = `
+Object {
+  "data": Object {
+    "login": null,
+  },
+  "errors": Array [
+    [GraphQLError: Password incorrect.],
+  ],
+}
+`;
+
 exports[`User GQL schema should not fetch the password using \`createUser()\` 1`] = `
 Object {
   "errors": Array [

@@ -86,4 +86,16 @@ describe('user resolver', () => {
       expect(user.password).not.toBe(password)
     })
   })
+
+  it('should get a token upon successful login', () => {
+    const username = 'User2'
+    const email = 'User2@user.com'
+    const password = 'test'
+
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      return Mutation.login({}, { username, password }).then(login => {
+        expect(login.token.length).toBeGreaterThan(50)
+      })
+    })
+  })
 })

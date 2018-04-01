@@ -19,12 +19,17 @@ const typeDefs = `
     message: String
   }
 
+  type Token {
+    token: String
+  }
+
   type Query {
     status: String
     users: [User]
     user(_id: ID): User
     posts: [Post]
     post(_id: ID): Post
+    
   }
 
   type Mutation {
@@ -32,11 +37,17 @@ const typeDefs = `
       message: String
       author: ID!
     ): Post
+
     createUser(
       username: String! 
       email: String!
       password: String!
     ): User
+
+    login(
+      username: String! 
+      password: String!
+    ): Token
   }
 `
 

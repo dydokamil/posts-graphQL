@@ -30,6 +30,10 @@ const resolvers = {
 
       const post = new Post({ message, author })
       return post.save()
+    },
+    login: (obj, args) => {
+      const { username, password } = args
+      return User.login(username, password)
     }
   }
 }

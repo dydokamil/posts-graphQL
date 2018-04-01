@@ -96,7 +96,7 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  it('should create a user and hash their password', async () => {
+  it('should create a user and hash their password', () => {
     const username = 'User20'
     const email = 'User20@user.com'
     const password = 'test'
@@ -108,7 +108,7 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  it('passwords match', async () => {
+  it('passwords match', () => {
     const username = 'User28'
     const email = 'User28@user.com'
     const password = 'test'
@@ -137,7 +137,7 @@ describe('mongoose `Post` schema', () => {
     })
   })
 
-  it('should get a token upon successful login', async () => {
+  it('should get a token upon successful login', () => {
     const username = 'User200'
     const email = 'User200@user.com'
     const password = 'test'
@@ -146,7 +146,7 @@ describe('mongoose `Post` schema', () => {
       expect(user.username).toBe(username)
 
       return User.login(username, password).then(token => {
-        expect(token.length).toBeGreaterThan(20)
+        expect(token.token.length).toBeGreaterThan(20)
       })
     })
   })
@@ -180,7 +180,7 @@ describe('mongoose `Post` schema', () => {
       return User.createUser(username2, email2, password).then(user2 => {
         return User.login(username, password).then(token => {
           return User.login(username2, password).then(token2 => {
-            expect(token).not.toBe(token2)
+            expect(token.token).not.toBe(token2)
           })
         })
       })
@@ -194,7 +194,7 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return User.verifyToken(token).then(valid => {
+        return User.verifyToken(token.token).then(valid => {
           expect(valid).toBeTruthy()
         })
       })
@@ -231,9 +231,11 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createPost(badSubjectId, token, message).catch(err => {
-          expect(err).toMatchSnapshot()
-        })
+        return Subject.createPost(badSubjectId, token.token, message).catch(
+          err => {
+            expect(err).toMatchSnapshot()
+          }
+        )
       })
     })
   })
@@ -250,7 +252,7 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
             expect(subject.author.equals(user._id)).toBeTruthy()
             expect(subject.message).toBeDefined()
@@ -292,8 +294,8 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message }).then(subject => {
-          return Subject.createPost(subject._id, token, message).then(
+        return Subject.createSubject(token.token, { message }).then(subject => {
+          return Subject.createPost(subject._id, token.token, message).then(
             subject => {
               expect(subject.responses[0]).toBeDefined()
             }
@@ -313,18 +315,20 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message }).then(subject => {
-          return Subject.createPost(subject._id, token, message).then(post => {
-            return Subject.createPost(subject._id, token, message).then(
-              post2 => {
-                return Subject.findById(subject._id).then(
-                  subjectsWithResponses => {
-                    expect(subjectsWithResponses.responses.length).toBe(2)
-                  }
-                )
-              }
-            )
-          })
+        return Subject.createSubject(token.token, { message }).then(subject => {
+          return Subject.createPost(subject._id, token.token, message).then(
+            post => {
+              return Subject.createPost(subject._id, token.token, message).then(
+                post2 => {
+                  return Subject.findById(subject._id).then(
+                    subjectsWithResponses => {
+                      expect(subjectsWithResponses.responses.length).toBe(2)
+                    }
+                  )
+                }
+              )
+            }
+          )
         })
       })
     })
@@ -358,11 +362,11 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return User.updatePassword(token, newPassword).then(success => {
+        return User.updatePassword(token.token, newPassword).then(success => {
           expect(success).toBeTruthy()
 
           return User.login(username, newPassword).then(token => {
-            expect(token.length).toBeGreaterThan(20)
+            expect(token.token.length).toBeGreaterThan(20)
           })
         })
       })
@@ -397,9 +401,9 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.updateSubject(subject._id, token, {
+            return Subject.updateSubject(subject._id, token.token, {
               message: newMessage,
               title: newTitle
             }).then(() => {
@@ -431,10 +435,10 @@ describe('mongoose `Post` schema', () => {
     return User.createUser(username, email, password).then(user => {
       return User.createUser(username2, email2, password).then(user2 => {
         return User.login(username, password).then(token => {
-          return Subject.createSubject(token, { message, title }).then(
+          return Subject.createSubject(token.token, { message, title }).then(
             subject => {
               return User.login(username2, password).then(token2 => {
-                return Subject.updateSubject(subject._id, token2, {
+                return Subject.updateSubject(subject._id, token2.token, {
                   message: newMessage,
                   title: newTitle
                 }).catch(err => {
@@ -460,13 +464,13 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.createPost(subject._id, token, message).then(
+            return Subject.createPost(subject._id, token.token, message).then(
               subjectWithResponse => {
                 return Post.updatePost(
                   subjectWithResponse.responses[0],
-                  token,
+                  token.token,
                   {
                     message: newMessage
                   }
@@ -501,9 +505,9 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.createPost(subject._id, token, message).then(
+            return Subject.createPost(subject._id, token.token, message).then(
               subjectWithResponse => {
                 const response = subjectWithResponse.responses[0]
                 return Post.updatePost(response, cheekyToken, {
@@ -536,21 +540,23 @@ describe('mongoose `Post` schema', () => {
       return User.createUser(username2, email2, password).then(user2 => {
         return User.login(username, password).then(token => {
           return User.login(username2, password).then(token2 => {
-            return Subject.createSubject(token, { message, title }).then(
+            return Subject.createSubject(token.token, { message, title }).then(
               subject => {
-                return Subject.createPost(subject._id, token, message).then(
-                  subjectWithResponse => {
-                    return Post.updatePost(
-                      subjectWithResponse.responses[0],
-                      token2,
-                      {
-                        message: newMessage
-                      }
-                    ).catch(err => {
-                      expect(err).toMatchSnapshot()
-                    })
-                  }
-                )
+                return Subject.createPost(
+                  subject._id,
+                  token.token,
+                  message
+                ).then(subjectWithResponse => {
+                  return Post.updatePost(
+                    subjectWithResponse.responses[0],
+                    token2.token,
+                    {
+                      message: newMessage
+                    }
+                  ).catch(err => {
+                    expect(err).toMatchSnapshot()
+                  })
+                })
               }
             )
           })
@@ -570,13 +576,13 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.createPost(subject._id, token, message).then(
+            return Subject.createPost(subject._id, token.token, message).then(
               subjectWithResponses => {
                 return Post.deletePost(
                   subjectWithResponses.responses[0],
-                  token
+                  token.token
                 ).then(success => {
                   expect(success).toBeTruthy()
                 })
@@ -602,9 +608,9 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.createPost(subject._id, token, message).then(
+            return Subject.createPost(subject._id, token.token, message).then(
               subjectWithResponse => {
                 const response = subjectWithResponse.responses[0]
                 return Post.deletePost(response, cheekyToken).catch(err => {
@@ -633,18 +639,20 @@ describe('mongoose `Post` schema', () => {
       return User.createUser(username2, email2, password).then(user2 => {
         return User.login(username, password).then(token => {
           return User.login(username2, password).then(token2 => {
-            return Subject.createSubject(token, { message, title }).then(
+            return Subject.createSubject(token.token, { message, title }).then(
               subject => {
-                return Subject.createPost(subject._id, token, message).then(
-                  subjectWithResponseAdded => {
-                    return Post.deletePost(
-                      subjectWithResponseAdded.responses[0],
-                      token2
-                    ).catch(err => {
-                      expect(err).toMatchSnapshot()
-                    })
-                  }
-                )
+                return Subject.createPost(
+                  subject._id,
+                  token.token,
+                  message
+                ).then(subjectWithResponseAdded => {
+                  return Post.deletePost(
+                    subjectWithResponseAdded.responses[0],
+                    token2.token
+                  ).catch(err => {
+                    expect(err).toMatchSnapshot()
+                  })
+                })
               }
             )
           })
@@ -666,11 +674,11 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.createPost(subject._id, token, message).then(
+            return Subject.createPost(subject._id, token.token, message).then(
               subjectWithResponse => {
-                return Post.deletePost(badPostId, token).catch(err => {
+                return Post.deletePost(badPostId, token.token).catch(err => {
                   expect(err).toMatchSnapshot()
                 })
               }
@@ -692,9 +700,9 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.deleteSubject(subject._id, token).then(() => {
+            return Subject.deleteSubject(subject._id, token.token).then(() => {
               return Subject.findById(subject._id).then(subject => {
                 expect(subject).not.toBeTruthy()
               })
@@ -716,20 +724,22 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.createPost(subject._id, token, message).then(
+            return Subject.createPost(subject._id, token.token, message).then(
               subjectWithResponse => {
                 const response = subjectWithResponse.responses[0]
 
                 return Post.findById(response).then(post => {
                   expect(post).toBeDefined()
 
-                  return Subject.deleteSubject(subject._id, token).then(() => {
-                    return Post.findById(response).then(post => {
-                      expect(post).not.toBeTruthy()
-                    })
-                  })
+                  return Subject.deleteSubject(subject._id, token.token).then(
+                    () => {
+                      return Post.findById(response).then(post => {
+                        expect(post).not.toBeTruthy()
+                      })
+                    }
+                  )
                 })
               }
             )
@@ -753,9 +763,9 @@ describe('mongoose `Post` schema', () => {
 
     return User.createUser(username, email, password).then(user => {
       return User.login(username, password).then(token => {
-        return Subject.createSubject(token, { message, title }).then(
+        return Subject.createSubject(token.token, { message, title }).then(
           subject => {
-            return Subject.createPost(subject._id, token, message).then(
+            return Subject.createPost(subject._id, token.token, message).then(
               subjectWithResponse => {
                 return Subject.deleteSubject(subject._id, cheekyToken).catch(
                   err => {
@@ -787,11 +797,13 @@ describe('mongoose `Post` schema', () => {
       return User.createUser(username2, email2, password).then(user2 => {
         return User.login(username, password).then(token => {
           return User.login(username2, password).then(token2 => {
-            return Subject.createSubject(token, { message, title }).then(
+            return Subject.createSubject(token.token, { message, title }).then(
               subject => {
-                return Subject.deleteSubject(subject._id, token2).catch(err => {
-                  expect(err).toMatchSnapshot()
-                })
+                return Subject.deleteSubject(subject._id, token2.token).catch(
+                  err => {
+                    expect(err).toMatchSnapshot()
+                  }
+                )
               }
             )
           })
