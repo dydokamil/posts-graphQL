@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 
 const { MONGO_URL_DEV } = require('../consts')
 const Subject = require('../models/subject')
+const User = require('../models/user')
 const schema = require('../schema')
 
 describe('subject schema GQL', () => {
@@ -19,6 +20,51 @@ describe('subject schema GQL', () => {
 
   afterAll(async done => {
     await mongoose.disconnect(done)
+  })
+
+  it('should get all subjects', () => {
+    const user = new User({
+      username: 'Someone',
+      email: 'email@email.com',
+      password: 'test'
+    })
+
+    return user.save(user => {
+      return User.findOne({ username: 'Someone' }).then(user => {
+        const subject = new Subject({
+          author: user,
+          createdAt: '2018-10-10T13:00:00',
+          editedAt: '2018-12-12T14:00:00',
+          message: 'some message',
+          title: 'some title'
+        })
+        return subject.save(() => {
+          const subjectsQuery = `
+      {
+        subjects {
+          author {
+            _id
+          }
+          responses {
+            _id
+          }
+          createdAt
+          editedAt
+          message
+          title
+        }
+      } 
+    `
+
+          return graphql(schema, subjectsQuery).then(subjects => {
+            expect(subjects.data.subjects[0].author._id).toBeTruthy()
+            expect(subjects.data.subjects[0].createdAt).toBe(
+              '2018-10-10T13:00:00'
+            )
+          })
+        })
+      })
+    })
   })
 
   it('should create a subject', () => {

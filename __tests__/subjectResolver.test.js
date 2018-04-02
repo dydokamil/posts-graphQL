@@ -53,6 +53,29 @@ describe('subject resolver', () => {
     })
   })
 
+  it('should create a subject, then get a list of subjects', () => {
+    const username = 'User2'
+    const email = 'user2@user.com'
+    const password = 'test2'
+
+    const message = 'some message2'
+    const title = 'some title2'
+
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      return Mutation.login({}, { username, password }).then(loginResult => {
+        const { token } = loginResult
+
+        return Mutation.createSubject({}, { token, message, title }).then(
+          subject => {
+            return Query.subjects().then(subjects => {
+              expect(subjects[0].author.username).toBe(username)
+            })
+          }
+        )
+      })
+    })
+  })
+
   it('should return an error given an invalid token', () => {
     expect.assertions(1)
     const username = 'User2'

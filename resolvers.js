@@ -20,7 +20,7 @@ const resolvers = {
     post: (obj, args) => {
       return Post.findOne({ ...args }).populate('author')
     },
-    subjects: () => Subject.find({}),
+    subjects: () => Subject.find({}).populate('author'),
     subject: (obj, args) => {
       return Subject.findOne({ ...args })
     }
