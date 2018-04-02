@@ -148,4 +148,46 @@ describe('post resolver', () => {
       })
     })
   })
+
+  it('should create a subject, then post, then delete the post', () => {
+    const username = 'User2'
+    const email = 'user2@user.com'
+    const password = 'test2'
+
+    const message = 'some message2'
+    const title = 'some title2'
+
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      return Mutation.login({}, { username, password }).then(loginResult => {
+        const { token } = loginResult
+
+        return Mutation.createSubject({}, { token, message, title }).then(
+          subject => {
+            const subjectId = subject._id
+
+            return Mutation.createPost(
+              {},
+              {
+                subjectId,
+                token,
+                message
+              }
+            ).then(subjectUpdated => {
+              const postId = subjectUpdated.responses[0]
+
+              return Mutation.deletePost({}, { postId, token }).then(
+                removedPost => {
+                  // get the same post again
+
+                  return Query.post({ _id: postId }).then(post => {
+                    expect(post).not.toBeTruthy()
+                  })
+                }
+              )
+            })
+          }
+        )
+      })
+    })
+  })
 })

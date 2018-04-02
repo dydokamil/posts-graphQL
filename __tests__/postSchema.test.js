@@ -329,4 +329,126 @@ describe('post schema', () => {
       })
     })
   })
+
+  it('should create a subject, then post, then delete the post', () => {
+    expect.assertions(1)
+    const username = 'User'
+    const email = 'user@user.com'
+    const password = 'test'
+
+    const createUserQuery = `
+      mutation {
+        createUser(
+          username: "${username}"
+          email: "${email}"
+          password: "${password}"
+        ) {
+          username
+        }
+      }
+    `
+
+    const loginQuery = `
+      mutation {
+        login(
+          username: "${username}"
+          password: "${password}"
+        ) {
+          token
+        }
+      }
+    `
+
+    return graphql(schema, createUserQuery).then(user => {
+      return graphql(schema, loginQuery).then(result => {
+        const message = 'Some message'
+        const title = 'Some title'
+
+        const { token } = result.data.login
+
+        const createSubjectQuery = `
+          mutation {
+            createSubject(
+              token: "${token}"
+              message: "${message}"
+              title: "${title}"
+            ) {
+              _id
+              createdAt
+              message
+              title
+              author {
+                username
+              }
+            }
+          }
+        `
+
+        return graphql(schema, createSubjectQuery).then(result => {
+          const { createSubject } = result.data
+          const subjectId = createSubject._id
+
+          const postMessage = 'post message'
+
+          const createPostQuery = `
+          mutation {
+            createPost(
+              subjectId: "${subjectId}"
+              token: "${token}"
+              message: "${postMessage}"
+            ) {
+              _id
+              author {
+                _id
+                username
+                email
+                createdAt
+                lastLogin
+              }
+              createdAt
+              editedAt
+              message
+              responses {
+                _id
+              }
+            }
+          }
+        `
+
+          return graphql(schema, createPostQuery).then(result => {
+            const subjectWithResponse = result.data.createPost
+
+            const postId = subjectWithResponse.responses[0]._id
+
+            const deletePostQuery = `
+              mutation {
+                deletePost(
+                  postId: "${postId}"
+                  token: "${token}"
+                ) {
+                  _id
+                }
+              } 
+            `
+
+            return graphql(schema, deletePostQuery).then(success => {
+              console.log(success)
+              const getPostQuery = `
+                {
+                  post(_id: "${postId}") {
+                    message
+                    editedAt
+                  }
+                } 
+              `
+
+              return graphql(schema, getPostQuery).then(nullPost => {
+                expect(nullPost.data.post).not.toBeTruthy()
+              })
+            })
+          })
+        })
+      })
+    })
+  })
 })

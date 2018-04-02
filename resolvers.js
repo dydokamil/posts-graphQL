@@ -61,6 +61,11 @@ const resolvers = {
       const { postId, token, message } = args
 
       return Post.updatePost(postId, token, { message })
+    },
+    deletePost: (obj, args) => {
+      const { postId, token } = args
+
+      return Post.deletePost(postId, token)
     }
   }
 }

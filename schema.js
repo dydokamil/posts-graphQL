@@ -84,6 +84,11 @@ const typeDefs = `
       token: String!
       message: String!
     ): Post
+
+    deletePost(
+      postId: String!
+      token: String!
+    ): Post
   }
 `
 
