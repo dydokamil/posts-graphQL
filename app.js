@@ -6,11 +6,13 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const { graphiqlExpress, graphqlExpress } = require('apollo-server-express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 const { MONGO_URL_DEV } = require('./consts')
 const schema = require('./schema')
 
 const app = express()
+app.use(cors())
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

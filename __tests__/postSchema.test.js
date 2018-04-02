@@ -166,31 +166,31 @@ describe('post schema', () => {
           const postMessage = 'post message'
 
           const createPostQuery = `
-          mutation {
-            createPost(
-              subjectId: "${subjectId}"
-              token: "${token}"
-              message: "${postMessage}"
-            ) {
-              _id
-              createdAt
-              editedAt
-              message
-              responses {
+            mutation {
+              createPost(
+                subjectId: "${subjectId}"
+                token: "${token}"
+                message: "${postMessage}"
+              ) {
                 _id
+                createdAt
+                editedAt
                 message
-                createdAt
+                responses {
+                  _id
+                  message
+                  createdAt
+                }
+                author {
+                  _id
+                  username
+                  email
+                  createdAt
+                  lastLogin
+                }
               }
-              author {
-                _id
-                username
-                email
-                createdAt
-                lastLogin
-              }
-            }
-          } 
-        `
+            } 
+          `
 
           return graphql(schema, createPostQuery).then(result => {
             const subjectWithResponse = result.data.createPost

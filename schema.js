@@ -26,10 +26,10 @@ const typeDefs = `
   type Query {
     status: String
     users: [User]
-    user(_id: ID): User
+    user(_id: String!): User
     posts: [Post]
-    post(_id: ID): Post
-    subject(_id: ID): Subject
+    post(_id: String!): Post
+    subject(_id: String!): Subject
     subjects: [Subject]
   }
 
