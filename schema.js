@@ -36,10 +36,10 @@ const typeDefs = `
   type Subject {
     _id: ID
     author: User
-    responses: [Post],
-    createdAt: String,
-    editedAt: String,
-    message: String,
+    responses: [Post]
+    createdAt: String
+    editedAt: String
+    message: String
     title: String
   }
 
@@ -78,6 +78,12 @@ const typeDefs = `
       message: String!
       title: String!
     ): Subject
+
+    editPost(
+      postId: String!
+      token: String!
+      message: String!
+    ): Post
   }
 `
 

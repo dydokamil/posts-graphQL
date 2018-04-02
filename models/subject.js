@@ -15,7 +15,7 @@ const publicKey = fs.readFileSync('./public.key')
 const Schema = mongoose.Schema
 
 const SubjectSchema = new Schema({
-  author: Schema.Types.ObjectId,
+  author: { type: Schema.Types.ObjectId, ref: 'User' },
   responses: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   createdAt: String,
   editedAt: String,
@@ -37,12 +37,19 @@ SubjectSchema.statics.createSubject = function (token, details) {
           const { message, title } = details
 
           const subject = new this({
-            author: user._id,
+            author: user,
             message,
             title,
             createdAt: moment.utc()
           })
-          return subject.save()
+          return subject.save().then(subject => {
+            return subject
+              .populate('author')
+              .execPopulate()
+              .then(populated => {
+                return populated
+              })
+          })
         })
         .catch(err => {
           throw err
@@ -64,13 +71,20 @@ SubjectSchema.statics.createPost = function (subjectId, token, message) {
           token,
           message,
           createdAt: moment.utc(),
-          author: user._id
+          author: user
         })
+
         return post
           .save()
           .then(p => {
-            subject.responses.push(p._id)
-            return subject.save()
+            subject.responses.push(p)
+            return subject.save().then(subject => {
+              return subject
+                .populate('responses')
+                .populate('author')
+                .execPopulate()
+                .then(populated => populated)
+            })
           })
           .catch(err => {
             throw err

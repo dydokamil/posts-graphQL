@@ -45,7 +45,12 @@ UserSchema.statics.createUser = function (username, email, password) {
   const User = this
 
   return hashPassword(password).then(hash => {
-    const user = new User({ username, email, password: hash })
+    const user = new User({
+      username,
+      email,
+      password: hash,
+      createdAt: moment.utc()
+    })
     return user.save()
   })
 }

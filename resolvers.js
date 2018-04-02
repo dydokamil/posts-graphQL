@@ -52,7 +52,15 @@ const resolvers = {
     updateSubject: (obj, args) => {
       const { subjectId, token, message, title } = args
 
-      return Subject.updateSubject(subjectId, token, { message, title })
+      return Subject.updateSubject(subjectId, token, {
+        message,
+        title
+      })
+    },
+    editPost: (obj, args) => {
+      const { postId, token, message } = args
+
+      return Post.updatePost(postId, token, { message })
     }
   }
 }

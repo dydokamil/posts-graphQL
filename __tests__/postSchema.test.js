@@ -173,6 +173,105 @@ describe('post schema', () => {
               message: "${postMessage}"
             ) {
               _id
+              createdAt
+              editedAt
+              message
+              responses {
+                _id
+                message
+                createdAt
+              }
+              author {
+                _id
+                username
+                email
+                createdAt
+                lastLogin
+              }
+            }
+          } 
+        `
+
+          return graphql(schema, createPostQuery).then(result => {
+            const subjectWithResponse = result.data.createPost
+            expect(subjectWithResponse.author.username).toBeTruthy()
+            expect(subjectWithResponse.responses[0]._id).toBeTruthy()
+            // console.log(subjectWithResponse)
+            expect(subjectWithResponse.responses.length).toBe(1)
+          })
+        })
+      })
+    })
+  })
+
+  it('should create a subject, then post, then edit the post', () => {
+    expect.assertions(2)
+    const username = 'User'
+    const email = 'user@user.com'
+    const password = 'test'
+
+    const createUserQuery = `
+      mutation {
+        createUser(
+          username: "${username}"
+          email: "${email}"
+          password: "${password}"
+        ) {
+          username
+        }
+      }
+    `
+
+    const loginQuery = `
+      mutation {
+        login(
+          username: "${username}"
+          password: "${password}"
+        ) {
+          token
+        }
+      }
+    `
+
+    return graphql(schema, createUserQuery).then(user => {
+      return graphql(schema, loginQuery).then(result => {
+        const message = 'Some message'
+        const title = 'Some title'
+
+        const { token } = result.data.login
+
+        const createSubjectQuery = `
+          mutation {
+            createSubject(
+              token: "${token}"
+              message: "${message}"
+              title: "${title}"
+            ) {
+              _id
+              createdAt
+              message
+              title
+              author {
+                username
+              }
+            }
+          }
+        `
+
+        return graphql(schema, createSubjectQuery).then(result => {
+          const { createSubject } = result.data
+          const subjectId = createSubject._id
+
+          const postMessage = 'post message'
+
+          const createPostQuery = `
+          mutation {
+            createPost(
+              subjectId: "${subjectId}"
+              token: "${token}"
+              message: "${postMessage}"
+            ) {
+              _id
               author {
                 _id
                 username
@@ -187,12 +286,44 @@ describe('post schema', () => {
                 _id
               }
             }
-          } 
+          }
         `
 
           return graphql(schema, createPostQuery).then(result => {
             const subjectWithResponse = result.data.createPost
-            expect(subjectWithResponse.responses.length).toBe(1)
+
+            const postId = subjectWithResponse.responses[0]._id
+            const newMessage = 'New Message'
+
+            const editPostQuery = `
+              mutation {
+                editPost(
+                  postId: "${postId}"
+                  token: "${token}"
+                  message: "${newMessage}"
+                ) {
+                  editedAt
+                  message
+                }
+              } 
+            `
+
+            return graphql(schema, editPostQuery).then(success => {
+              const getPostQuery = `
+                {
+                  post(_id: "${postId}") {
+                    message
+                    editedAt
+                  }
+                } 
+              `
+
+              return graphql(schema, getPostQuery).then(editedPost => {
+                const { post } = editedPost.data
+                expect(post.editedAt).toBeDefined()
+                expect(post.message).toBe(newMessage)
+              })
+            })
           })
         })
       })

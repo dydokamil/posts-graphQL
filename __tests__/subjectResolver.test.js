@@ -104,7 +104,7 @@ describe('subject resolver', () => {
                 title: newTitle
               }
             ).then(() => {
-              Query.subject({ _id: subjectId }).then(subjectUpdated => {
+              return Query.subject({ _id: subjectId }).then(subjectUpdated => {
                 expect(subjectUpdated.message).toBe(newMessage)
                 expect(subjectUpdated.title).toBe(newTitle)
                 expect(subjectUpdated.editedAt).toBeDefined()

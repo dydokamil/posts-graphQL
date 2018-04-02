@@ -95,7 +95,53 @@ describe('post resolver', () => {
                 message
               }
             ).then(subjectUpdated => {
+              expect(subjectUpdated.responses[0]).toBeTruthy()
               expect(subjectUpdated.responses.length).toBe(1)
+            })
+          }
+        )
+      })
+    })
+  })
+
+  it('should create a subject, then post, then edit the post', () => {
+    const username = 'User2'
+    const email = 'user2@user.com'
+    const password = 'test2'
+
+    const message = 'some message2'
+    const newMessage = 'some message3'
+    const title = 'some title2'
+
+    return Mutation.createUser({}, { username, email, password }).then(user => {
+      return Mutation.login({}, { username, password }).then(loginResult => {
+        const { token } = loginResult
+
+        return Mutation.createSubject({}, { token, message, title }).then(
+          subject => {
+            const subjectId = subject._id
+
+            return Mutation.createPost(
+              {},
+              {
+                subjectId,
+                token,
+                message
+              }
+            ).then(subjectUpdated => {
+              const postId = subjectUpdated.responses[0]
+
+              return Mutation.editPost(
+                {},
+                { postId, token, message: newMessage }
+              ).then(success => {
+                // get the same post again
+
+                return Query.post({ _id: postId }).then(updatedPost => {
+                  expect(updatedPost.editedAt).toBeDefined()
+                  expect(updatedPost.message).toBe(newMessage)
+                })
+              })
             })
           }
         )

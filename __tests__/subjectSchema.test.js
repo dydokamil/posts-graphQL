@@ -79,7 +79,7 @@ describe('subject schema GQL', () => {
           expect(createSubject.message).toBe(message)
           expect(createSubject.title).toBe(title)
           expect(createSubject.createdAt).toBeDefined()
-          expect(createSubject.author).toBeDefined()
+          expect(createSubject.author.username).toBeTruthy()
         })
       })
     })
