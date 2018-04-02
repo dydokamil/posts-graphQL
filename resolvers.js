@@ -66,6 +66,11 @@ const resolvers = {
       const { postId, token } = args
 
       return Post.deletePost(postId, token)
+    },
+    deleteSubject: (obj, args) => {
+      const { subjectId, token } = args
+
+      return Subject.deleteSubject(subjectId, token)
     }
   }
 }

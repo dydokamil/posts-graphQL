@@ -89,6 +89,11 @@ const typeDefs = `
       postId: String!
       token: String!
     ): Post
+
+    deleteSubject(
+      subjectId: String!
+      token: String!
+    ): Subject
   }
 `
 

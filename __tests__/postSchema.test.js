@@ -432,7 +432,6 @@ describe('post schema', () => {
             `
 
             return graphql(schema, deletePostQuery).then(success => {
-              console.log(success)
               const getPostQuery = `
                 {
                   post(_id: "${postId}") {
