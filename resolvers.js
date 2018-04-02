@@ -28,6 +28,8 @@ const resolvers = {
   Mutation: {
     createUser: (obj, args) => {
       const { username, email, password } = args
+      if (password.length === 0) throw new Error('Password can not be null.')
+
       const user = User.createUser(username, email, password)
       return user
     },
