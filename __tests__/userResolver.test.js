@@ -95,6 +95,7 @@ describe('user resolver', () => {
     return Mutation.createUser({}, { username, email, password }).then(user => {
       return Mutation.login({}, { username, password }).then(login => {
         expect(login.token.length).toBeGreaterThan(50)
+        expect(login.username).toBe(username)
       })
     })
   })

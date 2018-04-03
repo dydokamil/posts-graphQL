@@ -12,7 +12,11 @@ const { MONGO_URL_DEV } = require('./consts')
 const schema = require('./schema')
 
 const app = express()
-app.use(cors())
+var corsOptions = {
+  origin: 'http://localhost:3001',
+  credentials: true // <-- REQUIRED backend setting
+}
+app.use(cors(corsOptions))
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

@@ -238,6 +238,7 @@ describe('User GQL schema', () => {
           password: "${password}"
         ) {
           token
+          username
         }
       }
     `
@@ -246,6 +247,7 @@ describe('User GQL schema', () => {
       return graphql(schema, loginQuery).then(result2 => {
         const { token } = result2.data.login
         expect(token.length).toBeGreaterThan(50)
+        expect(result2.data.login.username).toBe(username)
       })
     })
   })

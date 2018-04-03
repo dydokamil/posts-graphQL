@@ -21,6 +21,7 @@ const typeDefs = `
 
   type Token {
     token: String
+    username: String
   }
 
   type Query {

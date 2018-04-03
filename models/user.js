@@ -79,7 +79,7 @@ UserSchema.statics.login = function (username, password) {
             return getNewToken(user._id)
               .then(token => {
                 return user.update({ lastLogin: moment.utc() }).then(() => {
-                  return { token }
+                  return { token, username }
                 })
               })
               .catch(err => {

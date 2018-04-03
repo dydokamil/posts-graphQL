@@ -16,6 +16,7 @@ describe('subject schema GQL', () => {
 
   afterEach(async () => {
     await Subject.removeSubjects()
+    await User.removeUsers()
   })
 
   afterAll(async done => {
@@ -29,39 +30,38 @@ describe('subject schema GQL', () => {
       password: 'test'
     })
 
-    return user.save(user => {
-      return User.findOne({ username: 'Someone' }).then(user => {
-        const subject = new Subject({
-          author: user,
-          createdAt: '2018-10-10T13:00:00',
-          editedAt: '2018-12-12T14:00:00',
-          message: 'some message',
-          title: 'some title'
-        })
-        return subject.save(() => {
-          const subjectsQuery = `
-      {
-        subjects {
-          author {
-            _id
-          }
-          responses {
-            _id
-          }
-          createdAt
-          editedAt
-          message
-          title
-        }
-      } 
-    `
+    return user.save().then(user => {
+      if (!user) throw new Error('User not found!')
+      const subject = new Subject({
+        author: user,
+        createdAt: '2018-10-10T13:00:00',
+        editedAt: '2018-12-12T14:00:00',
+        message: 'some message',
+        title: 'some title'
+      })
+      return subject.save().then(() => {
+        const subjectsQuery = `
+          {
+            subjects {
+              author {
+                _id
+              }
+              responses {
+                _id
+              }
+              createdAt
+              editedAt
+              message
+              title
+            }
+          } 
+        `
 
-          return graphql(schema, subjectsQuery).then(subjects => {
-            expect(subjects.data.subjects[0].author._id).toBeTruthy()
-            expect(subjects.data.subjects[0].createdAt).toBe(
-              '2018-10-10T13:00:00'
-            )
-          })
+        return graphql(schema, subjectsQuery).then(subjects => {
+          expect(subjects.data.subjects[0].author._id).toBeTruthy()
+          expect(subjects.data.subjects[0].createdAt).toBe(
+            '2018-10-10T13:00:00'
+          )
         })
       })
     })
@@ -264,9 +264,6 @@ describe('subject schema GQL', () => {
     const username = 'User'
     const email = 'user@user.com'
     const password = 'test'
-
-    const newMessage = 'some new message'
-    const newTitle = 'some new title'
 
     const createUserQuery = `
       mutation {
