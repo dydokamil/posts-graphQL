@@ -8,8 +8,8 @@ const Schema = mongoose.Schema
 
 const PostSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
-  createdAt: String,
-  editedAt: String,
+  createdAt: Number,
+  editedAt: Number,
   message: String
 })
 
@@ -27,7 +27,7 @@ PostSchema.statics.updatePost = function (postId, token, details) {
 
         const { message } = details
 
-        return post.update({ message, editedAt: moment.utc() })
+        return post.update({ message, editedAt: moment().unix() })
       })
     })
     .catch(err => {

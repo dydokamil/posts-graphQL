@@ -17,8 +17,8 @@ const Schema = mongoose.Schema
 const SubjectSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: 'User' },
   responses: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
-  createdAt: String,
-  editedAt: String,
+  createdAt: Number,
+  editedAt: Number,
   message: String,
   title: String
 })
@@ -40,7 +40,7 @@ SubjectSchema.statics.createSubject = function (token, details) {
             author: user,
             message,
             title,
-            createdAt: moment.utc()
+            createdAt: moment().unix()
           })
           return subject.save().then(subject => {
             user.subjects.push(subject)
@@ -68,7 +68,7 @@ SubjectSchema.statics.createPost = function (subjectId, token, message) {
         const post = new Post({
           token,
           message,
-          createdAt: moment.utc(),
+          createdAt: moment().unix(),
           author: user
         })
 
@@ -107,10 +107,10 @@ SubjectSchema.statics.updateSubject = function (subjectId, token, details) {
             throw new Error('Authentication error')
           }
 
-          const { message, title } = details
+          const { message } = details
 
           return subject
-            .update({ message, title, editedAt: moment.utc() })
+            .update({ message, editedAt: moment().unix() })
             .then(result => result.ok)
         })
       })

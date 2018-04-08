@@ -78,7 +78,6 @@ const typeDefs = `
       subjectId: String!
       token: String!
       message: String!
-      title: String!
     ): Subject
 
     editPost(

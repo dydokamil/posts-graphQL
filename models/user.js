@@ -32,8 +32,8 @@ const UserSchema = new Schema({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  createdAt: String,
-  lastLogin: String,
+  createdAt: Number,
+  lastLogin: Number,
   posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
   subjects: [{ type: Schema.Types.ObjectId, ref: 'Subject' }]
 })
@@ -50,7 +50,7 @@ UserSchema.statics.createUser = function (username, email, password) {
       username,
       email,
       password: hash,
-      createdAt: moment.utc()
+      createdAt: moment().unix()
     })
     return user.save()
   })
@@ -79,7 +79,7 @@ UserSchema.statics.login = function (username, password) {
           else {
             return getNewToken(user._id)
               .then(token => {
-                return user.update({ lastLogin: moment.utc() }).then(() => {
+                return user.update({ lastLogin: moment().unix() }).then(() => {
                   return { token, username }
                 })
               })
