@@ -43,12 +43,10 @@ SubjectSchema.statics.createSubject = function (token, details) {
             createdAt: moment.utc()
           })
           return subject.save().then(subject => {
-            return subject
-              .populate('author')
-              .execPopulate()
-              .then(populated => {
-                return populated
-              })
+            user.subjects.push(subject)
+            return user
+              .save()
+              .then(user => subject.populate('author').execPopulate())
           })
         })
         .catch(err => {
@@ -78,13 +76,15 @@ SubjectSchema.statics.createPost = function (subjectId, token, message) {
           .save()
           .then(p => {
             subject.responses.push(p)
-            return subject.save().then(subject => {
-              return subject
-                .populate('responses')
-                .populate('author')
-                .execPopulate()
-                .then(populated => populated)
-            })
+            user.posts.push(p)
+            return subject.save().then(subject =>
+              user.save().then(user =>
+                subject
+                  .populate('responses')
+                  .populate('author')
+                  .execPopulate()
+              )
+            )
           })
           .catch(err => {
             throw err

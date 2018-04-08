@@ -13,7 +13,9 @@ const resolvers = {
     users: () => User.find({}).populate('posts'),
     user: (obj, args) => {
       // TODO create a list of acceptable parameters
-      return User.findOne({ ...args }).populate('posts')
+      return User.findOne({ ...args })
+        .populate('posts')
+        .populate('subjects')
       // , Object.keys(args).join(' ')
     },
     posts: () => Post.find({}).populate('author'),

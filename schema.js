@@ -9,6 +9,7 @@ const typeDefs = `
     createdAt: String
     lastLogin: String
     posts: [Post]
+    subjects: [Subject]
   }
 
   type Post {

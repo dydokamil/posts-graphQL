@@ -34,7 +34,8 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   createdAt: String,
   lastLogin: String,
-  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
+  posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+  subjects: [{ type: Schema.Types.ObjectId, ref: 'Subject' }]
 })
 
 UserSchema.statics.removeUsers = function () {
