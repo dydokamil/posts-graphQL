@@ -1,13 +1,19 @@
 // const axios = require('axios')
-const mongoose = require('mongoose')
+// const mongoose = require('mongoose')
+const { PubSub } = require('graphql-subscriptions')
 
 const User = require('./models/user')
 const Post = require('./models/post')
 const Subject = require('./models/subject')
 
-const { MONGO_URL_DEV } = require('./consts')
+const pubsub = new PubSub()
 
 const resolvers = {
+  Subscription: {
+    subjectAdded: {
+      subscribe: () => pubsub.asyncIterator('subjectAdded')
+    }
+  },
   Query: {
     status: () => 'GraphQL status: OK',
     users: () => User.find({}).populate('posts'),
@@ -52,7 +58,16 @@ const resolvers = {
     },
     createSubject: (obj, args) => {
       const { token, message, title } = args
-      return Subject.createSubject(token, { message, title })
+
+      return Subject.createSubject(token, { message, title }).then(subject => {
+        pubsub.publish('subjectAdded', {
+          subjectAdded: subject
+        })
+
+        return subject
+      })
+
+      // return Subject.createSubject(token, { message, title })
     },
     updatePassword: (obj, args) => {
       const { token, password } = args

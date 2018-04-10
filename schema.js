@@ -35,6 +35,10 @@ const typeDefs = `
     subjects: [Subject]
   }
 
+  type Subscription {
+    subjectAdded: Subject
+  }
+
   type Subject {
     _id: ID
     author: User

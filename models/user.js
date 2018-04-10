@@ -130,6 +130,10 @@ UserSchema.statics.updatePassword = function (token, password) {
       return this.findById(decoded.userId).then(user => {
         if (!user) throw new Error('Token invalid. Log in again.')
 
+        if (password.length === 0) {
+          throw new Error('Password too short.')
+        }
+
         return hashPassword(password).then(hash => {
           return user.update({ password: hash }).then(result => result.ok)
         })
