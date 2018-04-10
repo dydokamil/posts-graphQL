@@ -74,17 +74,12 @@ SubjectSchema.statics.createPost = function (subjectId, token, message) {
 
         return post
           .save()
-          .then(p => {
-            subject.responses.push(p)
-            user.posts.push(p)
-            return subject.save().then(subject =>
-              user.save().then(user =>
-                subject
-                  .populate('responses')
-                  .populate('author')
-                  .execPopulate()
-              )
-            )
+          .then(post => {
+            subject.responses.push(post)
+            user.posts.push(post)
+            return subject
+              .save()
+              .then(subject => user.save().then(user => post))
           })
           .catch(err => {
             throw err

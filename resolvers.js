@@ -1,6 +1,5 @@
-// const axios = require('axios')
-// const mongoose = require('mongoose')
-const { PubSub } = require('graphql-subscriptions')
+const { PubSub, withFilter } = require('graphql-subscriptions')
+const mongoose = require('mongoose')
 
 const User = require('./models/user')
 const Post = require('./models/post')
@@ -12,17 +11,27 @@ const resolvers = {
   Subscription: {
     subjectAdded: {
       subscribe: () => pubsub.asyncIterator('subjectAdded')
+    },
+    postAdded: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('postAdded'),
+        (payload, variables) => payload.subjectId === variables.subjectId
+      )
+    },
+    postDeleted: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('postDeleted'),
+        (payload, variables) => payload.subjectId.equals(variables.subjectId)
+      )
     }
   },
   Query: {
     status: () => 'GraphQL status: OK',
     users: () => User.find({}).populate('posts'),
     user: (obj, args) => {
-      // TODO create a list of acceptable parameters
-      return User.findOne({ ...args })
+      return User.findOne({ _id: args._id })
         .populate('posts')
         .populate('subjects')
-      // , Object.keys(args).join(' ')
     },
     posts: () => Post.find({}).populate('author'),
     post: (obj, args) => {
@@ -50,7 +59,11 @@ const resolvers = {
     createPost: (obj, args) => {
       const { subjectId, token, message } = args
 
-      return Subject.createPost(subjectId, token, message)
+      return Subject.createPost(subjectId, token, message).then(post => {
+        pubsub.publish('postAdded', { postAdded: post, subjectId })
+
+        return post
+      })
     },
     login: (obj, args) => {
       const { username, password } = args
@@ -60,14 +73,10 @@ const resolvers = {
       const { token, message, title } = args
 
       return Subject.createSubject(token, { message, title }).then(subject => {
-        pubsub.publish('subjectAdded', {
-          subjectAdded: subject
-        })
+        pubsub.publish('subjectAdded', { subjectAdded: subject })
 
         return subject
       })
-
-      // return Subject.createSubject(token, { message, title })
     },
     updatePassword: (obj, args) => {
       const { token, password } = args
@@ -85,9 +94,17 @@ const resolvers = {
       return Post.updatePost(postId, token, { message })
     },
     deletePost: (obj, args) => {
-      const { postId, token } = args
+      let { postId, token } = args
 
-      return Post.deletePost(postId, token)
+      return Subject.findOne({
+        responses: {
+          _id: postId
+        }
+      }).then(subject =>
+        Post.deletePost(postId, token).then(postDeleted => {
+          pubsub.publish('postDeleted', { postDeleted, subjectId: subject._id })
+        })
+      )
     },
     deleteSubject: (obj, args) => {
       const { subjectId, token } = args

@@ -36,7 +36,9 @@ const typeDefs = `
   }
 
   type Subscription {
-    subjectAdded: Subject
+    subjectAdded: Subject,
+    postAdded(subjectId: String!): Post
+    postDeleted(subjectId: String!): Post
   }
 
   type Subject {
@@ -54,7 +56,7 @@ const typeDefs = `
       subjectId: String!
       token: String!
       message: String!
-    ): Subject
+    ): Post
 
     createUser(
       username: String! 

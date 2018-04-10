@@ -45,7 +45,12 @@ PostSchema.statics.deletePost = function (postId, token) {
           throw new Error('Authencitation error')
         }
 
-        return post.remove()
+        return post
+          .remove()
+          .then(result => post)
+          .catch(error => {
+            throw error
+          })
       })
     })
     .catch(err => {
