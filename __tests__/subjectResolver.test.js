@@ -109,7 +109,6 @@ describe('subject resolver', () => {
     const title = 'some title2'
 
     const newMessage = 'some new message'
-    const newTitle = 'some new title'
 
     return Mutation.createUser({}, { username, email, password }).then(user => {
       return Mutation.login({}, { username, password }).then(loginResult => {
@@ -123,13 +122,11 @@ describe('subject resolver', () => {
               {
                 subjectId,
                 token,
-                message: newMessage,
-                title: newTitle
+                message: newMessage
               }
-            ).then(() => {
+            ).then(res => {
               return Query.subject({ _id: subjectId }).then(subjectUpdated => {
                 expect(subjectUpdated.message).toBe(newMessage)
-                expect(subjectUpdated.title).toBe(newTitle)
                 expect(subjectUpdated.editedAt).toBeDefined()
               })
             })

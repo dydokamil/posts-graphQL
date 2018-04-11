@@ -34,8 +34,8 @@ describe('subject schema GQL', () => {
       if (!user) throw new Error('User not found!')
       const subject = new Subject({
         author: user,
-        createdAt: '2018-10-10T13:00:00',
-        editedAt: '2018-12-12T14:00:00',
+        createdAt: '1523390727',
+        editedAt: '1523390727',
         message: 'some message',
         title: 'some title'
       })
@@ -59,9 +59,7 @@ describe('subject schema GQL', () => {
 
         return graphql(schema, subjectsQuery).then(subjects => {
           expect(subjects.data.subjects[0].author._id).toBeTruthy()
-          expect(subjects.data.subjects[0].createdAt).toBe(
-            '2018-10-10T13:00:00'
-          )
+          expect(subjects.data.subjects[0].createdAt).toBe('1523390727')
         })
       })
     })
@@ -168,7 +166,6 @@ describe('subject schema GQL', () => {
     const password = 'test'
 
     const newMessage = 'some new message'
-    const newTitle = 'some new title'
 
     const createUserQuery = `
       mutation {
@@ -228,7 +225,6 @@ describe('subject schema GQL', () => {
                 subjectId: "${subjectId}"
                 token: "${token}"
                 message: "${newMessage}"
-                title: "${newTitle}"
               ) {
                 message
                 title
@@ -237,7 +233,7 @@ describe('subject schema GQL', () => {
             } 
           `
 
-          return graphql(schema, updateSubjectQuery).then(() => {
+          return graphql(schema, updateSubjectQuery).then(res => {
             const getSubjectQuery = `
               {
                 subject(_id: "${subjectId}") {
@@ -251,7 +247,6 @@ describe('subject schema GQL', () => {
             return graphql(schema, getSubjectQuery).then(response => {
               const subjectUpdated = response.data.subject
               expect(subjectUpdated.message).toBe(newMessage)
-              expect(subjectUpdated.title).toBe(newTitle)
               expect(subjectUpdated.editedAt).toBeDefined()
             })
           })

@@ -12,24 +12,24 @@ describe('mongoose `Post` schema', () => {
     username: 'User1',
     token: '001',
     email: 'User1@gql.com',
-    createdAt: '2018-12-12T13:00:00',
-    lastLogin: '2018-12-12T03:14:07',
+    createdAt: 1523390727,
+    lastLogin: 1523390727,
     posts: ['41224d776a326fb40f000002']
   }
 
   const postData = {
     _id: '5abba8e47af4d91c259e12ee',
     author: userData._id,
-    createdAt: '2018-10-10T13:00:00',
-    editedAt: '2018-10-10T13:00:00',
+    createdAt: 1523390727,
+    editedAt: 1523390727,
     message: 'Some message'
   }
 
   const subjectData = {
     _id: '4abba8e47af4d91c258e12ef',
     author: '5abba8e47af4d91c259e12ef',
-    createdAt: '2018-10-10T13:00:00',
-    editedAt: '2018-10-10T13:00:00',
+    createdAt: 1523390727,
+    editedAt: 1523390727,
     message: 'Some other message'
   }
 
@@ -292,17 +292,17 @@ describe('mongoose `Post` schema', () => {
 
     const message = 'Some message to save'
 
-    return User.createUser(username, email, password).then(user => {
-      return User.login(username, password).then(token => {
-        return Subject.createSubject(token.token, { message }).then(subject => {
-          return Subject.createPost(subject._id, token.token, message).then(
-            subject => {
+    return User.createUser(username, email, password).then(user =>
+      User.login(username, password).then(token =>
+        Subject.createSubject(token.token, { message }).then(subject =>
+          Subject.createPost(subject._id, token.token, message).then(post =>
+            Subject.findById(subject).then(subject =>
               expect(subject.responses[0]).toBeDefined()
-            }
+            )
           )
-        })
-      })
-    })
+        )
+      )
+    )
   })
 
   it('should add two responses to a post', () => {
@@ -389,7 +389,7 @@ describe('mongoose `Post` schema', () => {
   })
 
   it('should edit subject', () => {
-    expect.assertions(3)
+    expect.assertions(2)
 
     const message = 'message'
     const username = 'User4211'
@@ -397,26 +397,21 @@ describe('mongoose `Post` schema', () => {
     const password = 'test'
     const newMessage = 'message225'
     const title = 'title'
-    const newTitle = 'newTitle'
 
-    return User.createUser(username, email, password).then(user => {
-      return User.login(username, password).then(token => {
-        return Subject.createSubject(token.token, { message, title }).then(
-          subject => {
-            return Subject.updateSubject(subject._id, token.token, {
-              message: newMessage,
-              title: newTitle
-            }).then(() => {
-              return Subject.findById(subject._id).then(subjectEdited => {
-                expect(subjectEdited.message).toBe(newMessage)
-                expect(subjectEdited.title).toBe(newTitle)
-                expect(subjectEdited.editedAt).toBeDefined()
-              })
+    return User.createUser(username, email, password).then(user =>
+      User.login(username, password).then(token =>
+        Subject.createSubject(token.token, { message, title }).then(subject =>
+          Subject.updateSubject(subject._id, token.token, {
+            message: newMessage
+          }).then(() =>
+            Subject.findById(subject._id).then(subjectEdited => {
+              expect(subjectEdited.message).toBe(newMessage)
+              expect(subjectEdited.editedAt).toBeDefined()
             })
-          }
+          )
         )
-      })
-    })
+      )
+    )
   })
 
   it('should not edit the subject given a wrong author', () => {
@@ -462,32 +457,22 @@ describe('mongoose `Post` schema', () => {
     const title = 'title'
     const newMessage = 'newMessage'
 
-    return User.createUser(username, email, password).then(user => {
-      return User.login(username, password).then(token => {
-        return Subject.createSubject(token.token, { message, title }).then(
-          subject => {
-            return Subject.createPost(subject._id, token.token, message).then(
-              subjectWithResponse => {
-                return Post.updatePost(
-                  subjectWithResponse.responses[0],
-                  token.token,
-                  {
-                    message: newMessage
-                  }
-                ).then(() => {
-                  return Post.findById(subjectWithResponse.responses[0]).then(
-                    postUpdated => {
-                      expect(postUpdated.message).toBe(newMessage)
-                      expect(postUpdated.editedAt).toBeDefined()
-                    }
-                  )
-                })
-              }
+    return User.createUser(username, email, password).then(user =>
+      User.login(username, password).then(token =>
+        Subject.createSubject(token.token, { message, title }).then(subject =>
+          Subject.createPost(subject._id, token.token, message).then(post =>
+            Post.updatePost(post._id, token.token, {
+              message: newMessage
+            }).then(() =>
+              Post.findById(post._id).then(postUpdated => {
+                expect(postUpdated.message).toBe(newMessage)
+                expect(postUpdated.editedAt).toBeDefined()
+              })
             )
-          }
+          )
         )
-      })
-    })
+      )
+    )
   })
 
   it('should not edit post message given an invalid token', () => {
@@ -503,24 +488,19 @@ describe('mongoose `Post` schema', () => {
     const cheekyToken =
       'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1MjIzNDM1NjQsImV4cCI6MTUyMjQwODM2NH0.IHfxZBHvrwdETakAqbqBncg-rcvbOwRCG_zk2KFfFDunzki77aAReYHVqFTAVSwZ_C_YmlpIyUE8YXm2cIWViKeCPWuaLNd_G6yBZ9qwrBBtksFCDXWmUdLc4tJ92NzaIqwjVZtsfBRUleuWJu1MtIEIPO2gPIGA_pAvyd5zBY8fcdva4DgjBKwHKtn-2MuTwK9r_UgVE20DgLHu92sjv-qVlT6Op8hyTT5tGZjywVmlL23i7r_R7z6nBAzz1hYgVh9L7ndxNJagbOBftHzQe8mDEy0Mab9fVV8Gmr5-Il28ZTw4eCHct9Gd3LbFjuukb1kMCfkkISTUKxPmqwmAXw'
 
-    return User.createUser(username, email, password).then(user => {
-      return User.login(username, password).then(token => {
-        return Subject.createSubject(token.token, { message, title }).then(
-          subject => {
-            return Subject.createPost(subject._id, token.token, message).then(
-              subjectWithResponse => {
-                const response = subjectWithResponse.responses[0]
-                return Post.updatePost(response, cheekyToken, {
-                  message: newMessage
-                }).catch(err => {
-                  expect(err).toMatchSnapshot()
-                })
-              }
-            )
-          }
+    return User.createUser(username, email, password).then(user =>
+      User.login(username, password).then(token =>
+        Subject.createSubject(token.token, { message, title }).then(subject =>
+          Subject.createPost(subject._id, token.token, message).then(post =>
+            Post.updatePost(post._id, cheekyToken, {
+              message: newMessage
+            }).catch(err => {
+              expect(err).toMatchSnapshot()
+            })
+          )
         )
-      })
-    })
+      )
+    )
   })
 
   it('should not allow other users to edit the post', () => {
@@ -536,33 +516,25 @@ describe('mongoose `Post` schema', () => {
     const title = 'title'
     const newMessage = 'newMessage'
 
-    return User.createUser(username, email, password).then(user => {
-      return User.createUser(username2, email2, password).then(user2 => {
-        return User.login(username, password).then(token => {
-          return User.login(username2, password).then(token2 => {
-            return Subject.createSubject(token.token, { message, title }).then(
-              subject => {
-                return Subject.createPost(
-                  subject._id,
-                  token.token,
-                  message
-                ).then(subjectWithResponse => {
-                  return Post.updatePost(
-                    subjectWithResponse.responses[0],
-                    token2.token,
-                    {
+    return User.createUser(username, email, password).then(user =>
+      User.createUser(username2, email2, password).then(user2 =>
+        User.login(username, password).then(token =>
+          User.login(username2, password).then(token2 =>
+            Subject.createSubject(token.token, { message, title }).then(
+              subject =>
+                Subject.createPost(subject._id, token.token, message).then(
+                  post =>
+                    Post.updatePost(post._id, token2.token, {
                       message: newMessage
-                    }
-                  ).catch(err => {
-                    expect(err).toMatchSnapshot()
-                  })
-                })
-              }
+                    }).catch(err => {
+                      expect(err).toMatchSnapshot()
+                    })
+                )
             )
-          })
-        })
-      })
-    })
+          )
+        )
+      )
+    )
   })
 
   it('should delete a post', () => {
@@ -579,11 +551,8 @@ describe('mongoose `Post` schema', () => {
         return Subject.createSubject(token.token, { message, title }).then(
           subject => {
             return Subject.createPost(subject._id, token.token, message).then(
-              subjectWithResponses => {
-                return Post.deletePost(
-                  subjectWithResponses.responses[0],
-                  token.token
-                ).then(success => {
+              post => {
+                return Post.deletePost(post._id, token.token).then(success => {
                   expect(success).toBeTruthy()
                 })
               }
@@ -611,9 +580,9 @@ describe('mongoose `Post` schema', () => {
         return Subject.createSubject(token.token, { message, title }).then(
           subject => {
             return Subject.createPost(subject._id, token.token, message).then(
-              subjectWithResponse => {
-                const response = subjectWithResponse.responses[0]
-                return Post.deletePost(response, cheekyToken).catch(err => {
+              post => {
+                // const response = subjectWithResponse.responses[0]
+                return Post.deletePost(post._id, cheekyToken).catch(err => {
                   expect(err).toMatchSnapshot()
                 })
               }
@@ -645,9 +614,10 @@ describe('mongoose `Post` schema', () => {
                   subject._id,
                   token.token,
                   message
-                ).then(subjectWithResponseAdded => {
+                ).then(post => {
                   return Post.deletePost(
-                    subjectWithResponseAdded.responses[0],
+                    post._id,
+                    // subjectWithResponseAdded.responses[0],
                     token2.token
                   ).catch(err => {
                     expect(err).toMatchSnapshot()
@@ -727,20 +697,16 @@ describe('mongoose `Post` schema', () => {
         return Subject.createSubject(token.token, { message, title }).then(
           subject => {
             return Subject.createPost(subject._id, token.token, message).then(
-              subjectWithResponse => {
-                const response = subjectWithResponse.responses[0]
+              post => {
+                expect(post).toBeDefined()
 
-                return Post.findById(response).then(post => {
-                  expect(post).toBeDefined()
-
-                  return Subject.deleteSubject(subject._id, token.token).then(
-                    () => {
-                      return Post.findById(response).then(post => {
-                        expect(post).not.toBeTruthy()
-                      })
-                    }
-                  )
-                })
+                return Subject.deleteSubject(subject._id, token.token).then(
+                  () => {
+                    return Post.findById(post._id).then(post => {
+                      expect(post).not.toBeTruthy()
+                    })
+                  }
+                )
               }
             )
           }

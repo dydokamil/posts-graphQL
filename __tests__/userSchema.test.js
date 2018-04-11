@@ -11,8 +11,8 @@ describe('User GQL schema', () => {
     username: 'User1',
     password: 'test',
     email: 'User1@gql.com',
-    createdAt: '2018-12-12T13:00:00',
-    lastLogin: '2018-12-12T03:14:07',
+    createdAt: 1523390727,
+    lastLogin: 1523390727,
     posts: ['41224d776a326fb40f000002']
   }
 

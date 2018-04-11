@@ -12,16 +12,16 @@ describe('post schema', () => {
     password: 'test',
     username: 'User1',
     email: 'User1@gql.com',
-    createdAt: '2018-12-12T13:00:00',
-    lastLogin: '2018-12-12T03:14:07',
+    createdAt: 1523390727,
+    lastLogin: 1523390727,
     posts: ['5abba8e47af4d91c259e12ee']
   }
 
   const postData = {
     _id: '5abba8e47af4d91c259e12ee',
     author: userData._id,
-    createdAt: '2018-10-10T13:00:00',
-    editedAt: '2018-10-10T13:00:00',
+    createdAt: 1523390727,
+    editedAt: 1523390727,
     message: 'Some message'
   }
 
@@ -176,11 +176,6 @@ describe('post schema', () => {
                 createdAt
                 editedAt
                 message
-                responses {
-                  _id
-                  message
-                  createdAt
-                }
                 author {
                   _id
                   username
@@ -193,11 +188,8 @@ describe('post schema', () => {
           `
 
           return graphql(schema, createPostQuery).then(result => {
-            const subjectWithResponse = result.data.createPost
-            expect(subjectWithResponse.author.username).toBeTruthy()
-            expect(subjectWithResponse.responses[0]._id).toBeTruthy()
-            // console.log(subjectWithResponse)
-            expect(subjectWithResponse.responses.length).toBe(1)
+            const { createPost } = result.data
+            expect(createPost.message).toBe(postMessage)
           })
         })
       })
@@ -282,23 +274,18 @@ describe('post schema', () => {
               createdAt
               editedAt
               message
-              responses {
-                _id
-              }
             }
           }
         `
 
-          return graphql(schema, createPostQuery).then(result => {
-            const subjectWithResponse = result.data.createPost
-
-            const postId = subjectWithResponse.responses[0]._id
+          return graphql(schema, createPostQuery).then(post => {
+            const { createPost } = post.data
             const newMessage = 'New Message'
 
             const editPostQuery = `
               mutation {
                 editPost(
-                  postId: "${postId}"
+                  postId: "${createPost._id}"
                   token: "${token}"
                   message: "${newMessage}"
                 ) {
@@ -311,7 +298,7 @@ describe('post schema', () => {
             return graphql(schema, editPostQuery).then(success => {
               const getPostQuery = `
                 {
-                  post(_id: "${postId}") {
+                  post(_id: "${createPost._id}") {
                     message
                     editedAt
                   }
@@ -408,22 +395,19 @@ describe('post schema', () => {
               createdAt
               editedAt
               message
-              responses {
-                _id
-              }
             }
           }
         `
 
-          return graphql(schema, createPostQuery).then(result => {
-            const subjectWithResponse = result.data.createPost
+          return graphql(schema, createPostQuery).then(post => {
+            // const subjectWithResponse = result.data.createPost
 
-            const postId = subjectWithResponse.responses[0]._id
+            // const postId = subjectWithResponse.responses[0]._id
 
             const deletePostQuery = `
               mutation {
                 deletePost(
-                  postId: "${postId}"
+                  postId: "${post._id}"
                   token: "${token}"
                 ) {
                   _id
@@ -434,7 +418,7 @@ describe('post schema', () => {
             return graphql(schema, deletePostQuery).then(success => {
               const getPostQuery = `
                 {
-                  post(_id: "${postId}") {
+                  post(_id: "${post._id}") {
                     message
                     editedAt
                   }

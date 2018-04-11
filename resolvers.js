@@ -38,15 +38,14 @@ const resolvers = {
       return Post.findOne({ ...args }).populate('author')
     },
     subjects: () => Subject.find({}).populate('author'),
-    subject: (obj, args) => {
-      return Subject.findOne({ ...args })
+    subject: (obj, args) =>
+      Subject.findOne({ ...args })
         .populate('responses')
         .populate('author')
         .populate({
           path: 'responses',
           populate: { path: 'author', model: 'User' }
         })
-    }
   },
   Mutation: {
     createUser: (obj, args) => {

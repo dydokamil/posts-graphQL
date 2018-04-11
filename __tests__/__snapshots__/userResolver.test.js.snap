@@ -6,17 +6,17 @@ exports[`user resolver should respond with a user 1`] = `
 Object {
   "__v": 0,
   "_id": "5abba8e47af4d91c259e12ef",
-  "createdAt": "2018-12-12T13:00:00",
+  "createdAt": 1523390727,
   "email": "User1@gql.com",
-  "lastLogin": "2018-12-12T03:14:07",
+  "lastLogin": 1523390727,
   "password": "test",
   "posts": Array [
     Object {
       "__v": 0,
       "_id": "5abba8e47af4d91c259e12ee",
       "author": "5abba8e47af4d91c259e12ef",
-      "createdAt": "2018-10-10T13:00:00",
-      "editedAt": "2018-10-10T13:00:00",
+      "createdAt": 1523390727,
+      "editedAt": 1523390727,
       "message": "Some message",
     },
   ],
@@ -30,9 +30,9 @@ Array [
   Object {
     "__v": 0,
     "_id": "5abba8e47af4d91c259e12ef",
-    "createdAt": "2018-12-12T13:00:00",
+    "createdAt": 1523390727,
     "email": "User1@gql.com",
-    "lastLogin": "2018-12-12T03:14:07",
+    "lastLogin": 1523390727,
     "password": "test",
     "posts": Array [],
     "subjects": Array [],

@@ -106,7 +106,7 @@ SubjectSchema.statics.updateSubject = function (subjectId, token, details) {
 
           return subject
             .update({ message, editedAt: moment().unix() })
-            .then(result => result.ok)
+            .then(result => this.findById(subjectId))
         })
       })
     })

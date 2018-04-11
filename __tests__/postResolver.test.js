@@ -13,16 +13,16 @@ describe('post resolver', () => {
     username: 'User1',
     password: 'test',
     email: 'User1@gql.com',
-    createdAt: '2018-12-12T13:00:00',
-    lastLogin: '2018-12-12T03:14:07',
+    createdAt: 1523390727,
+    lastLogin: 1523390727,
     posts: ['5abba8e47af4d91c259e12ee']
   }
 
   const postData = {
     _id: '5abba8e47af4d91c259e12ee',
     author: userData._id,
-    createdAt: '2018-10-10T13:00:00',
-    editedAt: '2018-10-10T13:00:00',
+    createdAt: 1523390727,
+    editedAt: 1523390727,
     message: 'Some message'
   }
 
@@ -94,9 +94,10 @@ describe('post resolver', () => {
                 token,
                 message
               }
-            ).then(subjectUpdated => {
-              expect(subjectUpdated.responses[0]).toBeTruthy()
-              expect(subjectUpdated.responses.length).toBe(1)
+            ).then(post => {
+              // expect(subjectUpdated.responses[0]).toBeTruthy()
+              // expect(subjectUpdated.responses.length).toBe(1)
+              expect(post.message).toBe(message)
             })
           }
         )
@@ -128,16 +129,16 @@ describe('post resolver', () => {
                 token,
                 message
               }
-            ).then(subjectUpdated => {
-              const postId = subjectUpdated.responses[0]
+            ).then(post => {
+              // const postId = subjectUpdated.responses[0]
 
               return Mutation.editPost(
                 {},
-                { postId, token, message: newMessage }
+                { postId: post._id, token, message: newMessage }
               ).then(success => {
                 // get the same post again
 
-                return Query.post({ _id: postId }).then(updatedPost => {
+                return Query.post({ _id: post._id }).then(updatedPost => {
                   expect(updatedPost.editedAt).toBeDefined()
                   expect(updatedPost.message).toBe(newMessage)
                 })
@@ -172,14 +173,14 @@ describe('post resolver', () => {
                 token,
                 message
               }
-            ).then(subjectUpdated => {
-              const postId = subjectUpdated.responses[0]
+            ).then(post => {
+              // const postId = subjectUpdated.responses[0]
 
-              return Mutation.deletePost({}, { postId, token }).then(
+              return Mutation.deletePost({}, { postId: post._id, token }).then(
                 removedPost => {
                   // get the same post again
 
-                  return Query.post({ _id: postId }).then(post => {
+                  return Query.post({ _id: post._id }).then(post => {
                     expect(post).not.toBeTruthy()
                   })
                 }

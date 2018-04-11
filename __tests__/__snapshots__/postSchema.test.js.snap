@@ -5,8 +5,8 @@ Array [
   Object {
     "_id": "5abba8e47af4d91c259e12ee",
     "author": null,
-    "createdAt": "2018-10-10T13:00:00",
-    "editedAt": "2018-10-10T13:00:00",
+    "createdAt": "1523390727",
+    "editedAt": "1523390727",
     "message": "Some message",
   },
 ]
@@ -16,8 +16,8 @@ exports[`post schema should respond with a single post 1`] = `
 Object {
   "_id": "5abba8e47af4d91c259e12ee",
   "author": null,
-  "createdAt": "2018-10-10T13:00:00",
-  "editedAt": "2018-10-10T13:00:00",
+  "createdAt": "1523390727",
+  "editedAt": "1523390727",
   "message": "Some message",
 }
 `;

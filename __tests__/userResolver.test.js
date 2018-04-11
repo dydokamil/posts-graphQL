@@ -13,16 +13,16 @@ describe('user resolver', () => {
     password: 'test',
     username: 'User1',
     email: 'User1@gql.com',
-    createdAt: '2018-12-12T13:00:00',
-    lastLogin: '2018-12-12T03:14:07',
+    createdAt: 1523390727,
+    lastLogin: 1523390727,
     posts: ['5abba8e47af4d91c259e12ee']
   }
 
   const postData = {
     _id: '5abba8e47af4d91c259e12ee',
     author: userData._id,
-    createdAt: '2018-10-10T13:00:00',
-    editedAt: '2018-10-10T13:00:00',
+    createdAt: 1523390727,
+    editedAt: 1523390727,
     message: 'Some message'
   }
 
