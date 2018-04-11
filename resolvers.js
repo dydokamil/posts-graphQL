@@ -36,6 +36,13 @@ const resolvers = {
         (payload, variables) =>
           payload.subjectEdited._id.equals(variables.subjectId)
       )
+    },
+    subjectDeleted: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('subjectDeleted'),
+        (payload, variables) =>
+          payload.subjectDeleted._id.equals(variables.subjectId)
+      )
     }
   },
   Query: {
@@ -132,7 +139,13 @@ const resolvers = {
     deleteSubject: (obj, args) => {
       const { subjectId, token } = args
 
-      return Subject.deleteSubject(subjectId, token)
+      return Subject.findById(subjectId).then(subject =>
+        Subject.deleteSubject(subjectId, token).then(() => {
+          pubsub.publish('subjectDeleted', { subjectDeleted: subject })
+
+          return subject
+        })
+      )
     }
   }
 }
