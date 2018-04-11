@@ -29,6 +29,13 @@ const resolvers = {
         () => pubsub.asyncIterator('postEdited'),
         (payload, variables) => payload.subjectId.equals(variables.subjectId)
       )
+    },
+    subjectEdited: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('subjectEdited'),
+        (payload, variables) =>
+          payload.subjectEdited._id.equals(variables.subjectId)
+      )
     }
   },
   Query: {
@@ -91,7 +98,12 @@ const resolvers = {
     updateSubject: (obj, args) => {
       const { subjectId, token, message } = args
 
-      return Subject.updateSubject(subjectId, token, { message })
+      return Subject.updateSubject(subjectId, token, { message }).then(
+        subjectEdited => {
+          pubsub.publish('subjectEdited', { subjectEdited })
+          return subjectEdited
+        }
+      )
     },
     editPost: (obj, args) => {
       const { postId, token, message } = args
