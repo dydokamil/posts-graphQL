@@ -27,7 +27,9 @@ PostSchema.statics.updatePost = function (postId, token, details) {
 
         const { message } = details
 
-        return post.update({ message, editedAt: moment().unix() })
+        return post
+          .update({ message, editedAt: moment().unix() })
+          .then(() => this.findById(postId))
       })
     })
     .catch(err => {

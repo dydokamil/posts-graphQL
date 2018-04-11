@@ -23,6 +23,12 @@ const resolvers = {
         () => pubsub.asyncIterator('postDeleted'),
         (payload, variables) => payload.subjectId.equals(variables.subjectId)
       )
+    },
+    postEdited: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator('postEdited'),
+        (payload, variables) => payload.subjectId.equals(variables.subjectId)
+      )
     }
   },
   Query: {
@@ -90,7 +96,13 @@ const resolvers = {
     editPost: (obj, args) => {
       const { postId, token, message } = args
 
-      return Post.updatePost(postId, token, { message })
+      return Post.updatePost(postId, token, { message }).then(postEdited =>
+        Subject.findOne({ responses: { _id: postId } }).then(subject => {
+          pubsub.publish('postEdited', { postEdited, subjectId: subject._id })
+
+          return postEdited
+        })
+      )
     },
     deletePost: (obj, args) => {
       let { postId, token } = args

@@ -39,6 +39,7 @@ const typeDefs = `
     subjectAdded: Subject,
     postAdded(subjectId: String!): Post
     postDeleted(subjectId: String!): Post
+    postEdited(subjectId: String!): Post
   }
 
   type Subject {
